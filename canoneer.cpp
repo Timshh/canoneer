@@ -56,6 +56,22 @@ int main() {
   DistanceText.setFillColor(sf::Color(0, 0, 0, 255));
   DistanceText.setPosition(sf::Vector2(1734.0f, 698.0f));
 
+  sf::Text TutorialText(Font, "Tutorial: arrows to aim, rmb to charge, lmb to fire. Esc to exit", 30);
+  TutorialText.setFillColor(sf::Color(0, 0, 0, 255));
+  TutorialText.setPosition(sf::Vector2(50.0f, 900.0f));
+  sf::Text TutorialText2(
+      Font, "Aim at enemy coordinates, load charges and do wind correction by reversing wind power multiplying it on distance and adding to aim",
+      30);
+  TutorialText2.setFillColor(sf::Color(0, 0, 0, 255));
+  TutorialText2.setPosition(sf::Vector2(50.0f, 950.0f));
+  sf::Text TutorialText3(
+      Font,
+      "Get as many score as can in 120 seconds",
+      30);
+  TutorialText3.setFillColor(sf::Color(0, 0, 0, 255));
+  TutorialText3.setPosition(sf::Vector2(50.0f, 1000.0f));
+  
+
   sf::Texture Background;
   Background.loadFromFile("graphics/BG.png");
   sf::Sprite BGSprite(Background);
@@ -242,6 +258,10 @@ int main() {
 
     EnemyYText.setString(std::to_string((int)(EnemyCoord / 9) + 1));
     Window.draw(EnemyYText);
+
+    Window.draw(TutorialText);
+    Window.draw(TutorialText2);
+    Window.draw(TutorialText3);
 
     Window.display();
   }
