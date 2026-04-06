@@ -22,11 +22,15 @@ set (SOURCES
 "code/gamemode.cpp"
 "code/canoneer.cpp"
 "code/score.cpp"
-"code/canon.cpp")
+"code/canon.cpp"
+"code/bullet.cpp"
+"code/enemy.cpp")
 set (HEADERS 
 "code/gamemode.h"
 "code/score.h"
-"code/canon.h")
+"code/canon.h"
+"code/bullet.h"
+"code/enemy.h")
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)

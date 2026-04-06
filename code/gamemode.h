@@ -3,6 +3,7 @@
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include "score.h"
+#include "enemy.h"
 #include "canon.h"
 
 class Gamemode {
@@ -11,17 +12,11 @@ class Gamemode {
   Score* Scores;
   Canon* Weapon;
   sf::RenderWindow* Window;
-  int WindX, WindY, Distance, EnemyCoord;
-
-  sf::SoundBuffer *HitBuffer;
-  sf::Sound* HitSound;
+  bool HPressed = 0, TutorialHidden = 0;
+  const std::string FontPath = "data/Tiny5.ttf";
+  Enemy* Target;
   sf::Clock Time;
   sf::Font Font;
-  sf::Text WindXText = sf::Text(Font, "", 50);
-  sf::Text WindYText = sf::Text(Font, "", 50);
-  sf::Text EnemyXText = sf::Text(Font, "", 50);
-  sf::Text EnemyYText = sf::Text(Font, "", 50);
-  sf::Text DistanceText = sf::Text(Font, "", 50);
   sf::Text TutorialText =
       sf::Text(Font,
                "Tutorial: arrows to aim, rmb to charge, lmb to fire. Esc to "
@@ -33,11 +28,11 @@ class Gamemode {
                "it on distance and adding to aim",
                40);
   sf::Text TutorialText3 =
-      sf::Text(Font, "Get as many score as can in 120 seconds", 40);
+      sf::Text(Font, "Get as many score as can in 120 seconds. H to hide tutorial", 40);
   sf::Texture Background, UI, Cell;
   sf::Sprite *BGSprite, *UISprite;
   std::vector<sf::Sprite> Cells = {};
 
   void Tick();
-  void NewTarget(int* Distance, int* WindX, int* WindY, int* EnemyCoord);
+  Enemy* NewTarget();
 };

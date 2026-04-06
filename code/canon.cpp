@@ -69,11 +69,8 @@ void Canon::DrawCanon() {
         }
         ShotSound = new sf::Sound(*ShotBuffer);
         ShotSound->play();
-        FlyTime = 3 * Charges;
-        ShotCoord = AimCoord;
-        ShotCharges = Charges;
+        Shot = new Bullet(Window, Target, AimCoord, Charges, 3 * Charges);
         Charges = 0;
-        Shot = 1;
         LmbPressed = 1;
       }
     } else {
@@ -100,7 +97,8 @@ void Canon::DrawCanon() {
   Window->draw(*AimSprite);
 }
 
-bool Canon::Tick(float deltatime) {
+void Canon::Tick(float deltatime, Enemy* target) {
+  Target = target;
   if (!Shot) {
     sf::Sprite ReadySprite(Ready);
     ReadySprite.setPosition(sf::Vector2(100.0f, 494.0f));
@@ -111,17 +109,18 @@ bool Canon::Tick(float deltatime) {
     Window->draw(ReadySprite);
   }
 
-  TimerText.setString(std::to_string((int)FlyTime));
-  Window->draw(TimerText);
-
   ChargesText.setString(std::to_string(Charges));
   Window->draw(ChargesText);
   if (Shot) {
-    FlyTime -= deltatime;
-    if (FlyTime <= 0) {
+    if (!Shot->Tick(deltatime)) {
+      TimerText.setString(std::to_string((int)Shot->FlyTime));
+      Window->draw(TimerText);
+      return;
+    } else {
+      delete Shot;
       Shot = 0;
-      return 1;
     }
   }
-  return 0;
+  TimerText.setString("0");
+  Window->draw(TimerText);
 }

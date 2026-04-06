@@ -2,24 +2,12 @@
 
 Gamemode::Gamemode(sf::RenderWindow* window) {
   Window = window;
-  Font.openFromFile("data/Tiny5.ttf");
-  Scores = new Score(Window, "data/Tiny5.ttf");
-  Weapon = new Canon(Window, "data/Tiny5.ttf");
-  WindYText.setFillColor(sf::Color::Black);
-  DistanceText.setFillColor(sf::Color::Black);
-  WindXText.setFillColor(sf::Color::Black);
-  EnemyXText.setFillColor(sf::Color::Black);
-  EnemyYText.setFillColor(sf::Color::Black);
+  Font.openFromFile(FontPath);
+  Scores = new Score(Window, FontPath);
+  Weapon = new Canon(Window, FontPath);
   TutorialText.setFillColor(sf::Color::Black);
   TutorialText2.setFillColor(sf::Color::Black);
   TutorialText3.setFillColor(sf::Color::Black);
-  
-  WindXText.setPosition(sf::Vector2(1734.0f, 322.0f));
-  WindYText.setPosition(sf::Vector2(1734.0f, 414.0f));
-  EnemyXText.setPosition(sf::Vector2(1734.0f, 506.0f));
-  EnemyYText.setPosition(sf::Vector2(1734.0f, 598.0f));
-  DistanceText.setPosition(sf::Vector2(1734.0f, 690.0f));
-  
   TutorialText.setPosition(sf::Vector2(50.0f, 900.0f));
   TutorialText2.setPosition(sf::Vector2(50.0f, 950.0f));
   TutorialText3.setPosition(sf::Vector2(50.0f, 1000.0f));
@@ -41,20 +29,22 @@ Gamemode::Gamemode(sf::RenderWindow* window) {
     Cells.push_back(NewCell);
   }
 
-  NewTarget(&Distance, &WindX, &WindY, &EnemyCoord);
+  Target = NewTarget();
 }
 
-void Gamemode::NewTarget(int* Distance, int* WindX, int* WindY, int* EnemyCoord) {
-  *Distance = rand() % 3 + 1;
-  *WindX = rand() % 3 - 1;
-  if (*Distance > 2) {
-    *WindY = 0;
+Enemy* Gamemode::NewTarget() {
+  int distance = rand() % 3 + 1;
+  int  windX = rand() % 3 - 1;
+  int windY;
+  if (distance > 2) {
+    windY = 0;
   } else {
-    *WindY = rand() % 3 - 1;
+    windY = rand() % 3 - 1;
   }
   int enemyX = rand() % 3 + 3;
   int enemyY = (rand() % 3 + 2) * 9;
-  *EnemyCoord = enemyX + enemyY;
+  int enemyCoord = enemyX + enemyY;
+  return new Enemy(Window, FontPath, enemyCoord, windX, windY, distance);
 }
 
 void Gamemode::Tick() {
@@ -64,6 +54,14 @@ void Gamemode::Tick() {
     // Input
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
       Window->close();
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::H)) {
+      if (!HPressed) {
+        TutorialHidden = !TutorialHidden;
+        HPressed = 1;
+      }
+    } else {
+      HPressed = 0;
     }
 
     // Sprites position
@@ -77,23 +75,13 @@ void Gamemode::Tick() {
 
     Window->draw(*UISprite);
 
-    if (Weapon->Tick(deltatime)) {
-      if (Weapon->ShotCoord ==
-              EnemyCoord - WindX * Distance - WindY * 9 * Distance and
-          Distance == Weapon->ShotCharges) {
-        Scores->AddScore(1);
-        NewTarget(&Distance, &WindX, &WindY, &EnemyCoord);
-        HitBuffer = new sf::SoundBuffer();
-        HitBuffer->loadFromFile("data/Hit.wav");
-        HitSound = new sf::Sound(*HitBuffer);
-        HitSound->play();
-      } else {
-        HitBuffer = new sf::SoundBuffer();
-        HitBuffer->loadFromFile("data/Miss.wav");
-        HitSound = new sf::Sound(*HitBuffer);
-        HitSound->play();
-      }
+    if (Target->Tick(deltatime)) {
+      delete Target;
+      Scores->AddScore(1);
+      Target = NewTarget();
     }
+
+    Weapon->Tick(deltatime, Target);
 
     for (int i = 0; i < 63; i++) {
       Window->draw(Cells[i]);
@@ -101,24 +89,11 @@ void Gamemode::Tick() {
 
     Scores->Tick(deltatime);
 
-    DistanceText.setString(std::to_string(Distance));
-    Window->draw(DistanceText);
-
-    WindXText.setString(std::to_string((int)WindX));
-    Window->draw(WindXText);
-
-    WindYText.setString(std::to_string((int)WindY));
-    Window->draw(WindYText);
-
-    EnemyXText.setString(std::to_string(EnemyCoord % 9 + 1));
-    Window->draw(EnemyXText);
-
-    EnemyYText.setString(std::to_string((int)(EnemyCoord / 9) + 1));
-    Window->draw(EnemyYText);
-
-    Window->draw(TutorialText);
-    Window->draw(TutorialText2);
-    Window->draw(TutorialText3);
+    if (!TutorialHidden) {
+      Window->draw(TutorialText);
+      Window->draw(TutorialText2);
+      Window->draw(TutorialText3);
+    }
 
     Window->display();
   }
