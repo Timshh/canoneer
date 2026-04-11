@@ -1,14 +1,18 @@
 ﻿#include "enemy.h"
 
-Enemy::Enemy(sf::RenderWindow* window, std::string font, int coord, int windX,
-             int windY,
-             int distance) {
+Enemy::Enemy(sf::RenderWindow* window, sf::Font* font, int coord, int windX,
+             int windY, int distance)
+    : Font(font),
+      WindXText(*Font, "", 50),
+      DistanceText(*Font, "", 50),
+      WindYText(*Font, "", 50),
+      XText(*Font, "", 50),
+      YText(*Font, "", 50) {
   Window = window;
   Coord = coord;
   WindX = windX;
   WindY = windY;
   Distance = distance;
-  Font.openFromFile(font);
   WindYText.setFillColor(sf::Color::Black);
   DistanceText.setFillColor(sf::Color::Black);
   WindXText.setFillColor(sf::Color::Black);
@@ -21,12 +25,10 @@ Enemy::Enemy(sf::RenderWindow* window, std::string font, int coord, int windX,
   DistanceText.setPosition(sf::Vector2(1734.0f, 690.0f));
 }
 
-
-
 bool Enemy::Hit(int coord, int distance) {
   if (coord == Coord - WindX * Distance - WindY * 9 * Distance and
       Distance == distance) {
-    Alive = 0;
+    Alive = false;
     return 1;
   }
   return 0;
@@ -47,7 +49,7 @@ bool Enemy::Tick(float deltatime) {
 
   YText.setString(std::to_string((int)(Coord / 9) + 1));
   Window->draw(YText);
-  if (!Alive) {  
+  if (!Alive) {
     return 1;
   }
   return 0;

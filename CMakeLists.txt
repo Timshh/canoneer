@@ -20,7 +20,7 @@ FetchContent_MakeAvailable(SFML)
 
 set (SOURCES 
 "code/gamemode.cpp"
-"code/canoneer.cpp"
+"code/main.cpp"
 "code/score.cpp"
 "code/canon.cpp"
 "code/bullet.cpp"

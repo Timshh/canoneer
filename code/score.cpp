@@ -1,8 +1,8 @@
 ﻿#include "score.h"
 
-Score::Score(sf::RenderWindow* window, std::string font) {
+Score::Score(sf::RenderWindow* window, sf::Font* font)
+    : Font(font), TimeText(*Font, "", 50), ScoreText(*Font, "", 50) {
   Window = window;
-  Font.openFromFile(font);
   TimeText.setFillColor(sf::Color::Black);
   ScoreText.setFillColor(sf::Color::Black);
   TimeText.setPosition(sf::Vector2(106.0f, 322.0f));
@@ -14,7 +14,7 @@ void Score::AddScore(int scores) { Scores += scores; }
 void Score::Tick(float deltatime) {
   TimeLeft -= deltatime;
   if (TimeLeft <= 0) {
-    GameOver = 1;
+    GameOver = true;
     EndBuffer = new sf::SoundBuffer();
     EndBuffer->loadFromFile("data/Ending.wav");
     EndSound = new sf::Sound(*EndBuffer);

@@ -1,56 +1,58 @@
 ﻿#include "canon.h"
 
-Canon::Canon(sf::RenderWindow* window, std::string font) {
+Canon::Canon(sf::RenderWindow* window, sf::Font* font)
+    : Aim(sf::Texture("data/Aim.png")),
+      CanonTexture(sf::Texture("data/Canon.png")),
+      Ready(sf::Texture("data/Ready.png")),
+      NonReady(sf::Texture("data/NonReady.png")), 
+      CanonSprite(CanonTexture),
+      AimSprite(Aim),
+      Font(font),
+      TimerText(*Font, "", 50),
+      ChargesText(*Font, "", 50) {
   Window = window;
-  Font.openFromFile(font);
   TimerText.setFillColor(sf::Color::Black);
   ChargesText.setFillColor(sf::Color::Black);
   TimerText.setPosition(sf::Vector2(106.0f, 598.0f));
   ChargesText.setPosition(sf::Vector2(106.0f, 690.0f));
-  Aim.loadFromFile("data/Aim.png");
-  CanonTexture.loadFromFile("data/Canon.png");
-  Ready.loadFromFile("data/Ready.png");
-  NonReady.loadFromFile("data/NonReady.png");
-  CanonSprite = new sf::Sprite(CanonTexture);
-  AimSprite = new sf::Sprite(Aim);
 }
 
 void Canon::DrawCanon() {
   if (!Shot) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
       if (AimCoord >= 1 and !RightPressed and AimCoord % 9 != 0) {
-        RightPressed = 1;
         AimCoord -= 1;
+        RightPressed = true;
       }
     } else {
-      RightPressed = 0;
+      RightPressed = false;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
       if (AimCoord <= 61 and !LeftPressed and AimCoord % 9 != 8) {
-        LeftPressed = 1;
         AimCoord += 1;
+        LeftPressed = true;
       }
     } else {
-      LeftPressed = 0;
+      LeftPressed = false;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
       if (AimCoord >= 9 and !UpPressed) {
         AimCoord -= 9;
-        UpPressed = 1;
+        UpPressed = true;
       }
     } else {
-      UpPressed = 0;
+      UpPressed = false;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
       if (AimCoord <= 53 and !DownPressed) {
         AimCoord += 9;
-        DownPressed = 1;
+        DownPressed = true;
       }
     } else {
-      DownPressed = 0;
+      DownPressed = false;
     }
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
@@ -67,34 +69,37 @@ void Canon::DrawCanon() {
             ShotBuffer->loadFromFile("data/FireHeavy.wav");
             break;
         }
+        if (ShotSound) {
+          delete ShotSound;
+        }
         ShotSound = new sf::Sound(*ShotBuffer);
         ShotSound->play();
         Shot = new Bullet(Window, Target, AimCoord, Charges, 3 * Charges);
         Charges = 0;
-        LmbPressed = 1;
+        LmbPressed = true;
       }
     } else {
-      LmbPressed = 0;
+      LmbPressed = false;
     }
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right)) {
       if (Charges < 3 and !RmbPressed) {
         Charges += 1;
-        RmbPressed = 1;
+        RmbPressed = true;
       }
     } else {
-      RmbPressed = 0;
+      RmbPressed = false;
     }
   }
 
   float AimX = AimCoord % 9;
-  float AimY = trunc(AimCoord / 9);
-  AimSprite->setPosition(
-      sf::Vector2(546.0f + 92.0f * AimX, 218.0f + 92.0f * AimY));
-  CanonSprite->setPosition(sf::Vector2(546.0f + 92.0f * (AimX * 0.2f + 2.1f),
-                                       218.0f + 92.0f * (AimY * 0.2f)));
-  Window->draw(*CanonSprite);
-  Window->draw(*AimSprite);
+  float AimY = (int)(AimCoord / 9);
+  AimSprite.setPosition(
+      sf::Vector2f(546 + 92 * AimX, 218 + 92 * AimY));
+  CanonSprite.setPosition(sf::Vector2f(546 + 92 * (AimX * 0.2 + 2.1),
+                                       218 + 92 * (AimY * 0.2)));
+  Window->draw(CanonSprite);
+  Window->draw(AimSprite);
 }
 
 void Canon::Tick(float deltatime, Enemy* target) {

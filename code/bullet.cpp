@@ -1,6 +1,7 @@
 ﻿#include "bullet.h"
 
-Bullet::Bullet(sf::RenderWindow* window, Enemy* target, int coord, int charges, int flyTime) {
+Bullet::Bullet(sf::RenderWindow* window, Enemy* target, int coord, int charges,
+               int flyTime) {
   Window = window;
   Target = target;
   ShotCoord = coord;

@@ -1,6 +1,7 @@
-﻿#include "gamemode.h"
-#include <cstdlib>
+﻿#include <cstdlib>
 #include <ctime>
+
+#include "gamemode.h"
 
 int main() {
   srand(time(NULL));
@@ -8,6 +9,9 @@ int main() {
                           sf::State::Fullscreen);
   Gamemode GM(&Window);
   while (Window.isOpen()) {
+    while (auto event = Window.pollEvent()) {
+      if (event->is<sf::Event::Closed>()) Window.close();
+    }
     GM.Tick();
   }
   return 0;

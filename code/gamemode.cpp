@@ -1,10 +1,14 @@
 ﻿#include <gamemode.h>
 
-Gamemode::Gamemode(sf::RenderWindow* window) {
+Gamemode::Gamemode(sf::RenderWindow* window)
+    : Background(sf::Texture("data/BG.png")),
+      UI(sf::Texture("data/ArtUI.png")),
+      Cell(sf::Texture("data/Cell.png")),
+      BGSprite(Background), UISprite(UI) {
   Window = window;
   Font.openFromFile(FontPath);
-  Scores = new Score(Window, FontPath);
-  Weapon = new Canon(Window, FontPath);
+  Scores = new Score(Window, &Font);
+  Weapon = new Canon(Window, &Font);
   TutorialText.setFillColor(sf::Color::Black);
   TutorialText2.setFillColor(sf::Color::Black);
   TutorialText3.setFillColor(sf::Color::Black);
@@ -12,13 +16,9 @@ Gamemode::Gamemode(sf::RenderWindow* window) {
   TutorialText2.setPosition(sf::Vector2(50.0f, 950.0f));
   TutorialText3.setPosition(sf::Vector2(50.0f, 1000.0f));
 
-  Background.loadFromFile("data/BG.png");
-  UI.loadFromFile("data/ArtUI.png");
-  Cell.loadFromFile("data/Cell.png");
   
-  BGSprite = new sf::Sprite(Background);
-  UISprite = new sf::Sprite(UI);
-  UISprite->setPosition(sf::Vector2(0.0f, 0.0f));
+
+  UISprite.setPosition(sf::Vector2(0.0f, 0.0f));
 
   for (int i = 0; i < 63; i++) {
     sf::Sprite NewCell(Cell);
@@ -34,7 +34,7 @@ Gamemode::Gamemode(sf::RenderWindow* window) {
 
 Enemy* Gamemode::NewTarget() {
   int distance = rand() % 3 + 1;
-  int  windX = rand() % 3 - 1;
+  int windX = rand() % 3 - 1;
   int windY;
   if (distance > 2) {
     windY = 0;
@@ -44,7 +44,7 @@ Enemy* Gamemode::NewTarget() {
   int enemyX = rand() % 3 + 3;
   int enemyY = (rand() % 3 + 2) * 9;
   int enemyCoord = enemyX + enemyY;
-  return new Enemy(Window, FontPath, enemyCoord, windX, windY, distance);
+  return new Enemy(Window, &Font, enemyCoord, windX, windY, distance);
 }
 
 void Gamemode::Tick() {
@@ -58,22 +58,22 @@ void Gamemode::Tick() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::H)) {
       if (!HPressed) {
         TutorialHidden = !TutorialHidden;
-        HPressed = 1;
+        HPressed = true;
       }
     } else {
-      HPressed = 0;
+      HPressed = false;
     }
 
     // Sprites position
-    BGSprite->setPosition(sf::Vector2(0.0f, 0.0f));
+    BGSprite.setPosition(sf::Vector2(0.0f, 0.0f));
 
     // Draw
     Window->clear();
-    Window->draw(*BGSprite);
+    Window->draw(BGSprite);
 
     Weapon->DrawCanon();
 
-    Window->draw(*UISprite);
+    Window->draw(UISprite);
 
     if (Target->Tick(deltatime)) {
       delete Target;
