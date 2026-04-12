@@ -12,20 +12,20 @@ Gamemode::Gamemode(sf::RenderWindow* window)
   TutorialText.setFillColor(sf::Color::Black);
   TutorialText2.setFillColor(sf::Color::Black);
   TutorialText3.setFillColor(sf::Color::Black);
-  TutorialText.setPosition(sf::Vector2(50.0f, 900.0f));
-  TutorialText2.setPosition(sf::Vector2(50.0f, 950.0f));
-  TutorialText3.setPosition(sf::Vector2(50.0f, 1000.0f));
+  TutorialText.setPosition(sf::Vector2f(50.0, 900.0));
+  TutorialText2.setPosition(sf::Vector2f(50.0, 950.0));
+  TutorialText3.setPosition(sf::Vector2f(50.0, 1000.0));
 
   
 
-  UISprite.setPosition(sf::Vector2(0.0f, 0.0f));
+  UISprite.setPosition(sf::Vector2f(0.0, 0.0));
 
   for (int i = 0; i < 63; i++) {
     sf::Sprite NewCell(Cell);
     float x = i % 9;
     float y = trunc(i / 9);
     NewCell.setPosition(
-        sf::Vector2(sf::Vector2(546.0f + 92.0f * x, 218.0f + 92.0f * y)));
+        sf::Vector2f(sf::Vector2f(546.0 + 92.0 * x, 218.0 + 92.0 * y)));
     Cells.push_back(NewCell);
   }
 
@@ -50,11 +50,11 @@ Enemy* Gamemode::NewTarget() {
 void Gamemode::Tick() {
   // Timers
   float deltatime = Time.restart().asSeconds();
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+    Window->close();
+  }
   if (!Scores->GameOver) {
     // Input
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
-      Window->close();
-    }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::H)) {
       if (!HPressed) {
         TutorialHidden = !TutorialHidden;
@@ -65,7 +65,7 @@ void Gamemode::Tick() {
     }
 
     // Sprites position
-    BGSprite.setPosition(sf::Vector2(0.0f, 0.0f));
+    BGSprite.setPosition(sf::Vector2f(0.0, 0.0));
 
     // Draw
     Window->clear();

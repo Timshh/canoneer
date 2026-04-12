@@ -18,11 +18,11 @@ Enemy::Enemy(sf::RenderWindow* window, sf::Font* font, int coord, int windX,
   WindXText.setFillColor(sf::Color::Black);
   XText.setFillColor(sf::Color::Black);
   YText.setFillColor(sf::Color::Black);
-  WindXText.setPosition(sf::Vector2(1734.0f, 322.0f));
-  WindYText.setPosition(sf::Vector2(1734.0f, 414.0f));
-  XText.setPosition(sf::Vector2(1734.0f, 506.0f));
-  YText.setPosition(sf::Vector2(1734.0f, 598.0f));
-  DistanceText.setPosition(sf::Vector2(1734.0f, 690.0f));
+  WindXText.setPosition(sf::Vector2f(1734.0, 322.0));
+  WindYText.setPosition(sf::Vector2f(1734.0, 414.0));
+  XText.setPosition(sf::Vector2f(1734.0, 506.0));
+  YText.setPosition(sf::Vector2f(1734.0, 598.0));
+  DistanceText.setPosition(sf::Vector2f(1734.0, 690.0));
 }
 
 bool Enemy::Hit(int coord, int distance) {
@@ -38,16 +38,16 @@ bool Enemy::Tick(float deltatime) {
   DistanceText.setString(std::to_string(Distance));
   Window->draw(DistanceText);
 
-  WindXText.setString(std::to_string((int)WindX));
+  WindXText.setString(std::to_string(static_cast<int>(WindX)));
   Window->draw(WindXText);
 
-  WindYText.setString(std::to_string((int)WindY));
+  WindYText.setString(std::to_string(static_cast<int>(WindY)));
   Window->draw(WindYText);
 
   XText.setString(std::to_string(Coord % 9 + 1));
   Window->draw(XText);
 
-  YText.setString(std::to_string((int)(Coord / 9) + 1));
+  YText.setString(std::to_string(static_cast<int>((Coord / 9) + 1)));
   Window->draw(YText);
   if (!Alive) {
     return 1;

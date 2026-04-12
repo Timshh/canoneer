@@ -5,8 +5,8 @@ Score::Score(sf::RenderWindow* window, sf::Font* font)
   Window = window;
   TimeText.setFillColor(sf::Color::Black);
   ScoreText.setFillColor(sf::Color::Black);
-  TimeText.setPosition(sf::Vector2(106.0f, 322.0f));
-  ScoreText.setPosition(sf::Vector2(106.0f, 414.0f));
+  TimeText.setPosition(sf::Vector2f(106.0f, 322.0f));
+  ScoreText.setPosition(sf::Vector2f(106.0f, 414.0f));
 }
 
 void Score::AddScore(int scores) { Scores += scores; }
@@ -22,6 +22,6 @@ void Score::Tick(float deltatime) {
   }
   ScoreText.setString(std::to_string(Scores));
   Window->draw(ScoreText);
-  TimeText.setString(std::to_string((int)TimeLeft));
+  TimeText.setString(std::to_string(static_cast<int>(TimeLeft)));
   Window->draw(TimeText);
 }

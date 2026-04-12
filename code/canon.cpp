@@ -13,8 +13,8 @@ Canon::Canon(sf::RenderWindow* window, sf::Font* font)
   Window = window;
   TimerText.setFillColor(sf::Color::Black);
   ChargesText.setFillColor(sf::Color::Black);
-  TimerText.setPosition(sf::Vector2(106.0f, 598.0f));
-  ChargesText.setPosition(sf::Vector2(106.0f, 690.0f));
+  TimerText.setPosition(sf::Vector2f(106.0f, 598.0f));
+  ChargesText.setPosition(sf::Vector2f(106.0f, 690.0f));
 }
 
 void Canon::DrawCanon() {
@@ -93,7 +93,7 @@ void Canon::DrawCanon() {
   }
 
   float AimX = AimCoord % 9;
-  float AimY = (int)(AimCoord / 9);
+  float AimY = static_cast<int>(AimCoord / 9);
   AimSprite.setPosition(
       sf::Vector2f(546 + 92 * AimX, 218 + 92 * AimY));
   CanonSprite.setPosition(sf::Vector2f(546 + 92 * (AimX * 0.2 + 2.1),
@@ -106,11 +106,11 @@ void Canon::Tick(float deltatime, Enemy* target) {
   Target = target;
   if (!Shot) {
     sf::Sprite ReadySprite(Ready);
-    ReadySprite.setPosition(sf::Vector2(100.0f, 494.0f));
+    ReadySprite.setPosition(sf::Vector2f(100.0, 494.0));
     Window->draw(ReadySprite);
   } else {
     sf::Sprite ReadySprite(NonReady);
-    ReadySprite.setPosition(sf::Vector2(100.0f, 494.0f));
+    ReadySprite.setPosition(sf::Vector2f(100.0, 494.0));
     Window->draw(ReadySprite);
   }
 

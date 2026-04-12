@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
-#include <iostream>
 
 #include "bullet.h"
 #include "enemy.h"

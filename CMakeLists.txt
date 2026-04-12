@@ -24,13 +24,15 @@ set (SOURCES
 "code/score.cpp"
 "code/canon.cpp"
 "code/bullet.cpp"
-"code/enemy.cpp")
+"code/enemy.cpp"
+"code/assetManager.cpp")
 set (HEADERS 
 "code/gamemode.h"
 "code/score.h"
 "code/canon.h"
 "code/bullet.h"
-"code/enemy.h")
+"code/enemy.h"
+"code/assetManager.h")
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
@@ -52,5 +54,5 @@ add_custom_command(
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     code
-    graphics
+    data
 )
