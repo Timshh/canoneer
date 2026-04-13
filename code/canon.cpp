@@ -1,20 +1,18 @@
 ﻿#include "canon.h"
 
-Canon::Canon(sf::RenderWindow* window, sf::Font* font)
-    : Aim(sf::Texture("data/Aim.png")),
-      CanonTexture(sf::Texture("data/Canon.png")),
-      Ready(sf::Texture("data/Ready.png")),
-      NonReady(sf::Texture("data/NonReady.png")), 
-      CanonSprite(CanonTexture),
-      AimSprite(Aim),
-      Font(font),
+Canon::Canon(sf::RenderWindow* window, AssetManager* manager)
+    : CanonSprite(manager->Canon),
+      AimSprite(manager->Aim),
+      Font(manager->GetFont()),
       TimerText(*Font, "", 50),
-      ChargesText(*Font, "", 50) {
+      ChargesText(*Font, "", 50),
+      ShotSound(manager->ShotWeak) {
   Window = window;
+  Manager = manager;
   TimerText.setFillColor(sf::Color::Black);
   ChargesText.setFillColor(sf::Color::Black);
-  TimerText.setPosition(sf::Vector2f(106.0f, 598.0f));
-  ChargesText.setPosition(sf::Vector2f(106.0f, 690.0f));
+  TimerText.setPosition(sf::Vector2f(106.0, 598.0));
+  ChargesText.setPosition(sf::Vector2f(106.0, 690.0));
 }
 
 void Canon::DrawCanon() {
@@ -57,24 +55,20 @@ void Canon::DrawCanon() {
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
       if (!Shot and Charges != 0 and !LmbPressed) {
-        ShotBuffer = new sf::SoundBuffer();
         switch (Charges) {
           case 1:
-            ShotBuffer->loadFromFile("data/FireWeak.wav");
+            ShotSound.setBuffer(Manager->ShotWeak);
             break;
           case 2:
-            ShotBuffer->loadFromFile("data/FireMid.wav");
+            ShotSound.setBuffer(Manager->ShotMid);
             break;
           case 3:
-            ShotBuffer->loadFromFile("data/FireHeavy.wav");
+            ShotSound.setBuffer(Manager->ShotHeavy);
             break;
         }
-        if (ShotSound) {
-          delete ShotSound;
-        }
-        ShotSound = new sf::Sound(*ShotBuffer);
-        ShotSound->play();
-        Shot = new Bullet(Window, Target, AimCoord, Charges, 3 * Charges);
+        ShotSound.play();
+        Shot =
+            new Bullet(Window, Target, Manager, AimCoord, Charges, 3 * Charges);
         Charges = 0;
         LmbPressed = true;
       }
@@ -105,11 +99,11 @@ void Canon::DrawCanon() {
 void Canon::Tick(float deltatime, Enemy* target) {
   Target = target;
   if (!Shot) {
-    sf::Sprite ReadySprite(Ready);
+    sf::Sprite ReadySprite(Manager->Ready);
     ReadySprite.setPosition(sf::Vector2f(100.0, 494.0));
     Window->draw(ReadySprite);
   } else {
-    sf::Sprite ReadySprite(NonReady);
+    sf::Sprite ReadySprite(Manager->NonReady);
     ReadySprite.setPosition(sf::Vector2f(100.0, 494.0));
     Window->draw(ReadySprite);
   }

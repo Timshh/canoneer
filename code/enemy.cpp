@@ -1,8 +1,9 @@
 ﻿#include "enemy.h"
 
-Enemy::Enemy(sf::RenderWindow* window, sf::Font* font, int coord, int windX,
+Enemy::Enemy(sf::RenderWindow* window, AssetManager* manager, int coord,
+             int windX,
              int windY, int distance)
-    : Font(font),
+    : Font(manager->GetFont()),
       WindXText(*Font, "", 50),
       DistanceText(*Font, "", 50),
       WindYText(*Font, "", 50),

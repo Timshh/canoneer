@@ -2,20 +2,20 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
+#include "assetManager.h"
 #include "enemy.h"
 
 class Bullet {
  public:
-  Bullet(sf::RenderWindow* window, Enemy* target, int coord, int charges,
+  Bullet(sf::RenderWindow* window, Enemy* target, AssetManager* manager,
+         int coord, int charges,
          int flyTime);
   Enemy* Target;
   sf::RenderWindow* Window;
+  AssetManager* Manager;
   int ShotCharges, ShotCoord;
   float FlyTime;
-  sf::SoundBuffer* HitBuffer;
-  sf::Sound* HitSound;
-  //sf::Texture BulletTexture;
-  //sf::Sprite* BulletSprite;
+  //sf::Sprite BulletSprite;
 
   bool Tick(float deltatime);
 };

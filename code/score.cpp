@@ -1,12 +1,12 @@
 ﻿#include "score.h"
 
-Score::Score(sf::RenderWindow* window, sf::Font* font)
-    : Font(font), TimeText(*Font, "", 50), ScoreText(*Font, "", 50) {
+Score::Score(sf::RenderWindow* window, AssetManager* manager)
+    : Font(manager->GetFont()), TimeText(*Font, "", 50), ScoreText(*Font, "", 50), EndSound(manager->End) {
   Window = window;
   TimeText.setFillColor(sf::Color::Black);
   ScoreText.setFillColor(sf::Color::Black);
-  TimeText.setPosition(sf::Vector2f(106.0f, 322.0f));
-  ScoreText.setPosition(sf::Vector2f(106.0f, 414.0f));
+  TimeText.setPosition(sf::Vector2f(106.0, 322.0));
+  ScoreText.setPosition(sf::Vector2f(106.0, 414.0));
 }
 
 void Score::AddScore(int scores) { Scores += scores; }
@@ -15,10 +15,7 @@ void Score::Tick(float deltatime) {
   TimeLeft -= deltatime;
   if (TimeLeft <= 0) {
     GameOver = true;
-    EndBuffer = new sf::SoundBuffer();
-    EndBuffer->loadFromFile("data/Ending.wav");
-    EndSound = new sf::Sound(*EndBuffer);
-    EndSound->play();
+    EndSound.play();
   }
   ScoreText.setString(std::to_string(Scores));
   Window->draw(ScoreText);

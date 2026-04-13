@@ -1,14 +1,26 @@
 ﻿#include <gamemode.h>
 
-Gamemode::Gamemode(sf::RenderWindow* window)
-    : Background(sf::Texture("data/BG.png")),
-      UI(sf::Texture("data/ArtUI.png")),
-      Cell(sf::Texture("data/Cell.png")),
-      BGSprite(Background), UISprite(UI) {
+Gamemode::Gamemode(sf::RenderWindow* window, AssetManager* manager)
+    : BGSprite(manager->Background),
+      UISprite(manager->UI),
+      Font(manager->GetFont()),
+      TutorialText(
+          *Font,
+          "Tutorial: arrows to aim, rmb to charge, lmb to fire. Esc to "
+          "exit. Aim at enemy coordinates, load charges",
+          40),
+      TutorialText2(
+          *Font,
+          "and make wind correction by reversing wind power multiplying "
+          "it on distance and adding to aim",
+          40),
+      TutorialText3(
+          *Font, "Get as many score as can in 120 seconds. H to hide tutorial",
+          40) {
+  Manager = manager;
   Window = window;
-  Font.openFromFile(FontPath);
-  Scores = new Score(Window, &Font);
-  Weapon = new Canon(Window, &Font);
+  Scores = new Score(Window, Manager);
+  Weapon = new Canon(Window, Manager);
   TutorialText.setFillColor(sf::Color::Black);
   TutorialText2.setFillColor(sf::Color::Black);
   TutorialText3.setFillColor(sf::Color::Black);
@@ -16,12 +28,10 @@ Gamemode::Gamemode(sf::RenderWindow* window)
   TutorialText2.setPosition(sf::Vector2f(50.0, 950.0));
   TutorialText3.setPosition(sf::Vector2f(50.0, 1000.0));
 
-  
-
   UISprite.setPosition(sf::Vector2f(0.0, 0.0));
 
   for (int i = 0; i < 63; i++) {
-    sf::Sprite NewCell(Cell);
+    sf::Sprite NewCell(Manager->Cell);
     float x = i % 9;
     float y = trunc(i / 9);
     NewCell.setPosition(
@@ -44,7 +54,7 @@ Enemy* Gamemode::NewTarget() {
   int enemyX = rand() % 3 + 3;
   int enemyY = (rand() % 3 + 2) * 9;
   int enemyCoord = enemyX + enemyY;
-  return new Enemy(Window, &Font, enemyCoord, windX, windY, distance);
+  return new Enemy(Window, Manager, enemyCoord, windX, windY, distance);
 }
 
 void Gamemode::Tick() {

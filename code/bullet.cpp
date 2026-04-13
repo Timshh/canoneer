@@ -1,8 +1,9 @@
 ﻿#include "bullet.h"
 
-Bullet::Bullet(sf::RenderWindow* window, Enemy* target, int coord, int charges,
-               int flyTime) {
+Bullet::Bullet(sf::RenderWindow* window, Enemy* target, AssetManager* manager,
+               int coord, int charges, int flyTime) {
   Window = window;
+  Manager = manager;
   Target = target;
   ShotCoord = coord;
   ShotCharges = charges;
@@ -12,17 +13,15 @@ Bullet::Bullet(sf::RenderWindow* window, Enemy* target, int coord, int charges,
 bool Bullet::Tick(float deltatime) {
   FlyTime -= deltatime;
   if (FlyTime <= 0) {
-    if (Target->Hit(ShotCoord, ShotCharges)) {
-      HitBuffer = new sf::SoundBuffer();
-      HitBuffer->loadFromFile("data/Hit.wav");
-      HitSound = new sf::Sound(*HitBuffer);
-      HitSound->play();
+    Target->Hit(ShotCoord, ShotCharges);
+    /*if (Target->Hit(ShotCoord, ShotCharges)) {
+      HitSound.setBuffer(Manager->Hit);
+      HitSound.play();
     } else {
-      HitBuffer = new sf::SoundBuffer();
-      HitBuffer->loadFromFile("data/Miss.wav");
-      HitSound = new sf::Sound(*HitBuffer);
-      HitSound->play();
-    }
+      HitSound.setBuffer(Manager->Miss);
+      HitSound.play();
+    }*/
+    // Will be replaced later with explosion
     return 1;
   }
   return 0;
