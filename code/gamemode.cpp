@@ -3,19 +3,19 @@
 Gamemode::Gamemode(sf::RenderWindow* window, AssetManager* manager)
     : BGSprite(manager->Background),
       UISprite(manager->UI),
-      Font(manager->GetFont()),
       TutorialText(
-          *Font,
+          manager->Font,
           "Tutorial: arrows to aim, rmb to charge, lmb to fire. Esc to "
           "exit. Aim at enemy coordinates, load charges",
           40),
       TutorialText2(
-          *Font,
+          manager->Font,
           "and make wind correction by reversing wind power multiplying "
           "it on distance and adding to aim",
           40),
       TutorialText3(
-          *Font, "Get as many score as can in 120 seconds. H to hide tutorial",
+          manager->Font,
+          "Get as many score as can in 120 seconds. H to hide tutorial",
           40) {
   Manager = manager;
   Window = window;
@@ -81,7 +81,7 @@ void Gamemode::Tick() {
     Window->clear();
     Window->draw(BGSprite);
 
-    Weapon->DrawCanon();
+    Weapon->DrawCanon(deltatime);
 
     Window->draw(UISprite);
 

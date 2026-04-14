@@ -10,14 +10,15 @@
 class Gamemode {
  public:
   Gamemode(sf::RenderWindow* window, AssetManager* manager);
+
   AssetManager* Manager;
   Score* Scores;
   Canon* Weapon;
   sf::RenderWindow* Window;
-  bool HPressed = false, TutorialHidden = false;
   Enemy* Target;
+
+  bool HPressed = false, TutorialHidden = false;
   sf::Clock Time;
-  sf::Font* Font;
   sf::Text TutorialText;
   sf::Text TutorialText2;
   sf::Text TutorialText3;

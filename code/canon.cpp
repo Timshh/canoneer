@@ -3,9 +3,8 @@
 Canon::Canon(sf::RenderWindow* window, AssetManager* manager)
     : CanonSprite(manager->Canon),
       AimSprite(manager->Aim),
-      Font(manager->GetFont()),
-      TimerText(*Font, "", 50),
-      ChargesText(*Font, "", 50),
+      TimerText(manager->Font, "", 50),
+      ChargesText(manager->Font, "", 50),
       ShotSound(manager->ShotWeak) {
   Window = window;
   Manager = manager;
@@ -15,7 +14,13 @@ Canon::Canon(sf::RenderWindow* window, AssetManager* manager)
   ChargesText.setPosition(sf::Vector2f(106.0, 690.0));
 }
 
-void Canon::DrawCanon() {
+void Canon::DrawCanon(float deltatime) {
+  if (Explode) {
+    if (Explode->Tick(deltatime)) {
+      delete Explode;
+      Explode = nullptr;
+    }
+  }
   if (!Shot) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
       if (AimCoord >= 1 and !RightPressed and AimCoord % 9 != 0) {
@@ -88,10 +93,9 @@ void Canon::DrawCanon() {
 
   float AimX = AimCoord % 9;
   float AimY = static_cast<int>(AimCoord / 9);
-  AimSprite.setPosition(
-      sf::Vector2f(546 + 92 * AimX, 218 + 92 * AimY));
-  CanonSprite.setPosition(sf::Vector2f(546 + 92 * (AimX * 0.2 + 2.1),
-                                       218 + 92 * (AimY * 0.2)));
+  AimSprite.setPosition(sf::Vector2f(546 + 92 * AimX, 218 + 92 * AimY));
+  CanonSprite.setPosition(
+      sf::Vector2f(546 + 92 * (AimX * 0.2 + 2.1), 218 + 92 * (AimY * 0.2)));
   Window->draw(CanonSprite);
   Window->draw(AimSprite);
 }
@@ -116,6 +120,11 @@ void Canon::Tick(float deltatime, Enemy* target) {
       Window->draw(TimerText);
       return;
     } else {
+      Explode =
+          new Explosion(Window, Manager,
+                        Shot->ShotCoord + Target->WindX * Shot->ShotCharges +
+                            Target->WindY * 9 * Shot->ShotCharges,
+                        Shot->ShotCharges, !Target->Alive);
       delete Shot;
       Shot = 0;
     }

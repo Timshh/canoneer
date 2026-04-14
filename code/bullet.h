@@ -10,9 +10,11 @@ class Bullet {
   Bullet(sf::RenderWindow* window, Enemy* target, AssetManager* manager,
          int coord, int charges,
          int flyTime);
+
   Enemy* Target;
-  sf::RenderWindow* Window;
   AssetManager* Manager;
+  sf::RenderWindow* Window;
+  
   int ShotCharges, ShotCoord;
   float FlyTime;
   //sf::Sprite BulletSprite;

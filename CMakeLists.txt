@@ -24,6 +24,7 @@ set (SOURCES
 "code/score.cpp"
 "code/canon.cpp"
 "code/bullet.cpp"
+"code/explosion.cpp"
 "code/enemy.cpp"
 "code/assetManager.cpp")
 set (HEADERS 
@@ -31,6 +32,7 @@ set (HEADERS
 "code/score.h"
 "code/canon.h"
 "code/bullet.h"
+"code/explosion.h"
 "code/enemy.h"
 "code/assetManager.h")
 

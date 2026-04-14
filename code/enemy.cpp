@@ -3,12 +3,11 @@
 Enemy::Enemy(sf::RenderWindow* window, AssetManager* manager, int coord,
              int windX,
              int windY, int distance)
-    : Font(manager->GetFont()),
-      WindXText(*Font, "", 50),
-      DistanceText(*Font, "", 50),
-      WindYText(*Font, "", 50),
-      XText(*Font, "", 50),
-      YText(*Font, "", 50) {
+    : WindXText(manager->Font, "", 50),
+      DistanceText(manager->Font, "", 50),
+      WindYText(manager->Font, "", 50),
+      XText(manager->Font, "", 50),
+      YText(manager->Font, "", 50) {
   Window = window;
   Coord = coord;
   WindX = windX;

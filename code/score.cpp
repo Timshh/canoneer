@@ -1,7 +1,9 @@
 ﻿#include "score.h"
 
 Score::Score(sf::RenderWindow* window, AssetManager* manager)
-    : Font(manager->GetFont()), TimeText(*Font, "", 50), ScoreText(*Font, "", 50), EndSound(manager->End) {
+    : TimeText(manager->Font, "", 50),
+      ScoreText(manager->Font, "", 50),
+      EndSound(manager->End) {
   Window = window;
   TimeText.setFillColor(sf::Color::Black);
   ScoreText.setFillColor(sf::Color::Black);
