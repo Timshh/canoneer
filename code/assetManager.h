@@ -9,7 +9,7 @@ class AssetManager {
 
   sf::SoundBuffer End, ShotWeak, ShotMid, ShotHeavy, Hit, Miss;
   sf::Texture Background, UI, Cell, Aim, Canon, Ready, NonReady, ExplosionFar,
-      ExplosionMid, ExplosionNear;
+      ExplosionMid, ExplosionNear, Bullet;
   sf::Font Font;
 
 };

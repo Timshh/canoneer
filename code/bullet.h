@@ -15,9 +15,9 @@ class Bullet {
   AssetManager* Manager;
   sf::RenderWindow* Window;
   
-  int ShotCharges, ShotCoord;
-  float FlyTime;
-  //sf::Sprite BulletSprite;
+  int ShotCharges, ShotCoord, WindX, WindY;
+  float FlyTime, Lifetime = 0;
+  sf::Sprite BulletSprite;
 
   bool Tick(float deltatime);
 };

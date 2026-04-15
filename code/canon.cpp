@@ -12,6 +12,7 @@ Canon::Canon(sf::RenderWindow* window, AssetManager* manager)
   ChargesText.setFillColor(sf::Color::Black);
   TimerText.setPosition(sf::Vector2f(106.0, 598.0));
   ChargesText.setPosition(sf::Vector2f(106.0, 690.0));
+  TimerText.setString("0");
 }
 
 void Canon::DrawCanon(float deltatime) {
@@ -91,6 +92,21 @@ void Canon::DrawCanon(float deltatime) {
     }
   }
 
+  if (Shot) {
+    if (!Shot->Tick(deltatime)) {
+      TimerText.setString(std::to_string((int)Shot->FlyTime));
+    } else {
+      Explode =
+          new Explosion(Window, Manager,
+                        Shot->ShotCoord + Target->WindX * Shot->ShotCharges +
+                            Target->WindY * 9 * Shot->ShotCharges,
+                        Shot->ShotCharges, !Target->Alive);
+      delete Shot;
+      Shot = nullptr;
+      TimerText.setString("0");
+    }
+  }
+
   float AimX = AimCoord % 9;
   float AimY = static_cast<int>(AimCoord / 9);
   AimSprite.setPosition(sf::Vector2f(546 + 92 * AimX, 218 + 92 * AimY));
@@ -114,21 +130,5 @@ void Canon::Tick(float deltatime, Enemy* target) {
 
   ChargesText.setString(std::to_string(Charges));
   Window->draw(ChargesText);
-  if (Shot) {
-    if (!Shot->Tick(deltatime)) {
-      TimerText.setString(std::to_string((int)Shot->FlyTime));
-      Window->draw(TimerText);
-      return;
-    } else {
-      Explode =
-          new Explosion(Window, Manager,
-                        Shot->ShotCoord + Target->WindX * Shot->ShotCharges +
-                            Target->WindY * 9 * Shot->ShotCharges,
-                        Shot->ShotCharges, !Target->Alive);
-      delete Shot;
-      Shot = 0;
-    }
-  }
-  TimerText.setString("0");
   Window->draw(TimerText);
 }

@@ -17,7 +17,8 @@ AssetManager::AssetManager(sf::RenderWindow* window) {
                 NonReady.loadFromFile("data/NonReady.png") and
                 ExplosionFar.loadFromFile("data/ExplosionFar.png") and
                 ExplosionMid.loadFromFile("data/ExplosionMid.png") and
-                ExplosionNear.loadFromFile("data/ExplosionNear.png");
+                ExplosionNear.loadFromFile("data/ExplosionNear.png") and
+                Bullet.loadFromFile("data/Bullet.png");
   if (!Opened) {
     window->close();
   }
