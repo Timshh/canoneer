@@ -19,9 +19,7 @@ class Gamemode {
 
   bool HPressed = false, TutorialHidden = false;
   sf::Clock Time;
-  sf::Text TutorialText;
-  sf::Text TutorialText2;
-  sf::Text TutorialText3;
+  sf::Text TutorialText, TutorialText2, TutorialText3, TypeText;
   sf::Sprite BGSprite, UISprite;
   std::vector<sf::Sprite> Cells = {};
 

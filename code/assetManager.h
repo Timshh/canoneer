@@ -8,7 +8,8 @@ class AssetManager {
   AssetManager(sf::RenderWindow* window);
 
   sf::SoundBuffer End, ShotWeak, ShotMid, ShotHeavy, Hit, Miss;
-  sf::Texture Background, UI, Cell, Aim, Canon, Ready, NonReady, ExplosionFar,
+  sf::Texture Background, UI, Cell, Aim, Canon, CanonFire, Ready, NonReady,
+      ExplosionFar,
       ExplosionMid, ExplosionNear, Bullet;
   sf::Font Font;
 

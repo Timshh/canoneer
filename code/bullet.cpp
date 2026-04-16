@@ -1,7 +1,7 @@
 ﻿#include "bullet.h"
 
 Bullet::Bullet(sf::RenderWindow* window, Enemy* target, AssetManager* manager,
-               int coord, int charges, int flyTime)
+               int coord, int charges, int flyTime, int type)
     : BulletSprite(manager->Bullet) {
   Window = window;
   Manager = manager;
@@ -11,6 +11,7 @@ Bullet::Bullet(sf::RenderWindow* window, Enemy* target, AssetManager* manager,
   ShotCoord = coord;
   ShotCharges = charges;
   FlyTime = flyTime;
+  Type = type;
 }
 
 bool Bullet::Tick(float deltatime) {
@@ -25,7 +26,7 @@ bool Bullet::Tick(float deltatime) {
   BulletSprite.setScale(sf::Vector2f(1 - Delta * 0.1, 1 - Delta * 0.1));
   Window->draw(BulletSprite);
   if (FlyTime <= 0) {
-    Target->Hit(ShotCoord, ShotCharges);
+    Target->Hit(ShotCoord, ShotCharges, Type);
     return 1;
   }
   return 0;

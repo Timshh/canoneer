@@ -13,6 +13,7 @@ AssetManager::AssetManager(sf::RenderWindow* window) {
                 Cell.loadFromFile("data/Cell.png") and
                 Aim.loadFromFile("data/Aim.png") and
                 Canon.loadFromFile("data/Canon.png") and
+                CanonFire.loadFromFile("data/CanonFire.png") and
                 Ready.loadFromFile("data/Ready.png") and
                 NonReady.loadFromFile("data/NonReady.png") and
                 ExplosionFar.loadFromFile("data/ExplosionFar.png") and

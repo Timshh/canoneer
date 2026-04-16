@@ -3,11 +3,11 @@
 Gamemode::Gamemode(sf::RenderWindow* window, AssetManager* manager)
     : BGSprite(manager->Background),
       UISprite(manager->UI),
-      TutorialText(
-          manager->Font,
-          "Tutorial: arrows to aim, rmb to charge, lmb to fire. Esc to "
-          "exit. Aim at enemy coordinates, load charges",
-          40),
+      TutorialText(manager->Font,
+                   "Tutorial: arrows to aim, X to charge, Z to fire, C to "
+                   "change Type. Esc to "
+                   "exit. Aim at enemy coordinates, load charges",
+                   40),
       TutorialText2(
           manager->Font,
           "and make wind correction by reversing wind power multiplying "
@@ -15,8 +15,9 @@ Gamemode::Gamemode(sf::RenderWindow* window, AssetManager* manager)
           40),
       TutorialText3(
           manager->Font,
-          "Get as many score as can in 120 seconds. H to hide tutorial",
-          40) {
+          "Get as many score as can in 120 seconds. H to hide tutorial", 40),
+      TypeText(manager->Font,
+               "Canoneer, remember!   Sol - Frag   Hev - HE   Air - Flak", 60) {
   Manager = manager;
   Window = window;
   Scores = new Score(Window, Manager);
@@ -24,9 +25,11 @@ Gamemode::Gamemode(sf::RenderWindow* window, AssetManager* manager)
   TutorialText.setFillColor(sf::Color::Black);
   TutorialText2.setFillColor(sf::Color::Black);
   TutorialText3.setFillColor(sf::Color::Black);
+  TypeText.setFillColor(sf::Color::Black);
   TutorialText.setPosition(sf::Vector2f(50.0, 900.0));
   TutorialText2.setPosition(sf::Vector2f(50.0, 950.0));
   TutorialText3.setPosition(sf::Vector2f(50.0, 1000.0));
+  TypeText.setPosition(sf::Vector2f(180.0, 30.0));
 
   UISprite.setPosition(sf::Vector2f(0.0, 0.0));
 
@@ -54,17 +57,18 @@ Enemy* Gamemode::NewTarget() {
   int enemyX = rand() % 3 + 3;
   int enemyY = (rand() % 3 + 2) * 9;
   int enemyCoord = enemyX + enemyY;
-  return new Enemy(Window, Manager, enemyCoord, windX, windY, distance);
+  return new Enemy(Window, Manager, enemyCoord, windX, windY, distance,
+                   rand() % 3);
 }
 
 void Gamemode::Tick() {
   // Timers
   float deltatime = Time.restart().asSeconds();
+  // Input
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
     Window->close();
   }
   if (!Scores->GameOver) {
-    // Input
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::H)) {
       if (!HPressed) {
         TutorialHidden = !TutorialHidden;
@@ -80,9 +84,7 @@ void Gamemode::Tick() {
     // Draw
     Window->clear();
     Window->draw(BGSprite);
-
-    Weapon->DrawCanon(deltatime);
-
+    Weapon->Tick(deltatime, Target);
     Window->draw(UISprite);
 
     if (Target->Tick(deltatime)) {
@@ -91,12 +93,11 @@ void Gamemode::Tick() {
       Target = NewTarget();
     }
 
-    Weapon->Tick(deltatime, Target);
-
     for (int i = 0; i < 63; i++) {
       Window->draw(Cells[i]);
     }
 
+    Weapon->SubRender();
     Scores->Tick(deltatime);
 
     if (!TutorialHidden) {
@@ -104,6 +105,7 @@ void Gamemode::Tick() {
       Window->draw(TutorialText2);
       Window->draw(TutorialText3);
     }
+    Window->draw(TypeText);
 
     Window->display();
   }

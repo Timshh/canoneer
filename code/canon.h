@@ -17,13 +17,15 @@ class Canon {
   Explosion* Explode = nullptr;
   Enemy* Target;
 
-  int AimCoord = 0, Charges = 0;
+  int AimCoord = 0, Charges = 0, Type = 0;
+  float FireTime = 0, HitTime = 0;
   bool RightPressed = false, LeftPressed = false, UpPressed = false,
-       DownPressed = false, LmbPressed = false, RmbPressed = false;
+       DownPressed = false, ZPressed = false, XPressed = false,
+       CPressed = false;
   sf::Sound ShotSound;
-  sf::Text TimerText, ChargesText;
-  sf::Sprite AimSprite, CanonSprite;
+  sf::Text TimerText, ChargesText, TypeText;
+  sf::Sprite AimSprite, CanonSprite, ReadySprite, HitSprite;
 
-  void DrawCanon(float deltatime);
   void Tick(float deltatime, Enemy* target);
+  void SubRender();
 };
