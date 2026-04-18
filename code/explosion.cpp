@@ -1,7 +1,8 @@
 ﻿#include "explosion.h"
 
-Explosion::Explosion(sf::RenderWindow* window, AssetManager* manager,
-                     int location, int charges, bool hit)
+Explosion::Explosion(sf::RenderWindow* const window,
+                     AssetManager* const manager, const int location,
+                     const int charges, const bool hit)
     : ExplosionSprite(manager->ExplosionNear), HitSound(manager->Hit) {
   Window = window;
   if (hit) {
@@ -26,7 +27,7 @@ Explosion::Explosion(sf::RenderWindow* window, AssetManager* manager,
   HitSound.play();
 }
 
-bool Explosion::Tick(float deltatime) {
+bool Explosion::Tick(const float deltatime) {
   LifeTime -= deltatime;
   if (LifeTime <= 0) {  
     return 1;

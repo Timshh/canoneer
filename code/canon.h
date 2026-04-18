@@ -9,12 +9,17 @@
 
 class Canon {
  public:
-  Canon(sf::RenderWindow* window, AssetManager* manager);
+  Canon(sf::RenderWindow* const window, AssetManager* const manager);
 
+  void Tick(const float deltatime, Enemy* const target,
+            const bool gameOver);
+  void SubRender();
+
+ private:
   sf::RenderWindow* Window;
   AssetManager* Manager;
-  Bullet* Shot = nullptr;
-  Explosion* Explode = nullptr;
+  std::unique_ptr<Bullet> Shot = nullptr;
+  std::unique_ptr<Explosion> Explode = nullptr;
   Enemy* Target;
 
   int AimCoord = 0, Charges = 0, Type = 0;
@@ -26,6 +31,5 @@ class Canon {
   sf::Text TimerText, ChargesText, TypeText;
   sf::Sprite AimSprite, CanonSprite, ReadySprite, HitSprite;
 
-  void Tick(float deltatime, Enemy* target);
-  void SubRender();
+  void TickInput();
 };

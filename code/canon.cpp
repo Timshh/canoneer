@@ -1,6 +1,6 @@
 ﻿#include "canon.h"
 
-Canon::Canon(sf::RenderWindow* window, AssetManager* manager)
+Canon::Canon(sf::RenderWindow* const window, AssetManager* const manager)
     : CanonSprite(manager->Canon),
       AimSprite(manager->Aim),
       ReadySprite(manager->Ready),
@@ -22,96 +22,17 @@ Canon::Canon(sf::RenderWindow* window, AssetManager* manager)
   TimerText.setString("0");
 }
 
-void Canon::Tick(float deltatime, Enemy* target) {
+void Canon::Tick(const float deltatime, Enemy* const target,
+                 const bool gameOver) {
   Target = target;
   if (Explode) {
     if (Explode->Tick(deltatime)) {
-      delete Explode;
-      Explode = nullptr;
-      
+      Explode.reset();
     }
   }
-  // Input
-  if (!Shot) {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
-      if (AimCoord >= 1 and !RightPressed and AimCoord % 9 != 0) {
-        AimCoord -= 1;
-        RightPressed = true;
-      }
-    } else {
-      RightPressed = false;
-    }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
-      if (AimCoord <= 61 and !LeftPressed and AimCoord % 9 != 8) {
-        AimCoord += 1;
-        LeftPressed = true;
-      }
-    } else {
-      LeftPressed = false;
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
-      if (AimCoord >= 9 and !UpPressed) {
-        AimCoord -= 9;
-        UpPressed = true;
-      }
-    } else {
-      UpPressed = false;
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
-      if (AimCoord <= 53 and !DownPressed) {
-        AimCoord += 9;
-        DownPressed = true;
-      }
-    } else {
-      DownPressed = false;
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z)) {
-      if (!Shot and Charges != 0 and !ZPressed) {
-        switch (Charges) {
-          case 1:
-            ShotSound.setBuffer(Manager->ShotWeak);
-            break;
-          case 2:
-            ShotSound.setBuffer(Manager->ShotMid);
-            break;
-          case 3:
-            ShotSound.setBuffer(Manager->ShotHeavy);
-            break;
-        }
-        CanonSprite.setTexture(Manager->CanonFire);
-        FireTime = 0.2 + Charges * 0.2;
-        ShotSound.play();
-        Shot =
-            new Bullet(Window, Target, Manager, AimCoord, Charges, 3 * Charges, Type);
-        Charges = Type = 0;
-        ReadySprite.setTexture(Manager->NonReady);
-        ZPressed = true;
-      }
-    } else {
-      ZPressed = false;
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::X)) {
-      if (Charges < 3 and !XPressed) {
-        Charges += 1;
-        XPressed = true;
-      }
-    } else {
-      XPressed = false;
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::C)) {
-      if (!CPressed) {
-        Type = (Type + 1) % 3;
-        CPressed = true;
-      }
-    } else {
-      CPressed = false;
-    }
+  if (!Shot && !gameOver) {
+    TickInput();
   }
 
   if (Shot) {
@@ -122,13 +43,12 @@ void Canon::Tick(float deltatime, Enemy* target) {
         HitSprite.setTexture(Manager->Ready);
         HitTime = 1;
       }
-      Explode =
-          new Explosion(Window, Manager,
-                        Shot->ShotCoord + Target->WindX * Shot->ShotCharges +
-                            Target->WindY * 9 * Shot->ShotCharges,
-                        Shot->ShotCharges, !Target->Alive);
-      delete Shot;
-      Shot = nullptr;
+      Explode = std::make_unique<Explosion>(
+          Window, Manager,
+          Shot->ShotCoord + Target->WindX * Shot->ShotCharges +
+              Target->WindY * 9 * Shot->ShotCharges,
+          Shot->ShotCharges, !Target->Alive);
+      Shot.reset();
       TimerText.setString("0");
       ReadySprite.setTexture(Manager->Ready);
     }
@@ -155,6 +75,88 @@ void Canon::Tick(float deltatime, Enemy* target) {
 
   Window->draw(CanonSprite);
   Window->draw(AimSprite);
+}
+
+void Canon::TickInput() {
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
+    if (AimCoord >= 1 && !LeftPressed && AimCoord % 9 != 0) {
+      AimCoord -= 1;
+      LeftPressed = true;
+    }
+  } else {
+    LeftPressed = false;
+  }
+
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
+    if (AimCoord <= 61 && !RightPressed && AimCoord % 9 != 8) {
+      AimCoord += 1;
+      RightPressed = true;
+    }
+  } else {
+    RightPressed = false;
+  }
+
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
+    if (AimCoord >= 9 && !UpPressed) {
+      AimCoord -= 9;
+      UpPressed = true;
+    }
+  } else {
+    UpPressed = false;
+  }
+
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
+    if (AimCoord <= 53 && !DownPressed) {
+      AimCoord += 9;
+      DownPressed = true;
+    }
+  } else {
+    DownPressed = false;
+  }
+
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z)) {
+    if (!Shot && Charges != 0 && !ZPressed) {
+      switch (Charges) {
+        case 1:
+          ShotSound.setBuffer(Manager->ShotWeak);
+          break;
+        case 2:
+          ShotSound.setBuffer(Manager->ShotMid);
+          break;
+        case 3:
+          ShotSound.setBuffer(Manager->ShotHeavy);
+          break;
+      }
+      CanonSprite.setTexture(Manager->CanonFire);
+      FireTime = 0.2 + Charges * 0.2;
+      ShotSound.play();
+      Shot = std::make_unique<Bullet>(Window, Target, Manager, AimCoord,
+                                      Charges, Type);
+      Charges = Type = 0;
+      ReadySprite.setTexture(Manager->NonReady);
+      ZPressed = true;
+    }
+  } else {
+    ZPressed = false;
+  }
+
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::X)) {
+    if (Charges < 3 && !XPressed) {
+      Charges += 1;
+      XPressed = true;
+    }
+  } else {
+    XPressed = false;
+  }
+
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::C)) {
+    if (!CPressed) {
+      Type = (Type + 1) % 3;
+      CPressed = true;
+    }
+  } else {
+    CPressed = false;
+  }
 }
 
 void Canon::SubRender() {

@@ -7,17 +7,20 @@
 
 class Bullet {
  public:
-  Bullet(sf::RenderWindow* window, Enemy* target, AssetManager* manager,
-         int coord, int charges,
-         int flyTime, int type);
+  Bullet(sf::RenderWindow* const window, Enemy* const target,
+         AssetManager* const manager, const int coord, const int charges,
+         const int type);
 
+  int ShotCharges, ShotCoord, WindX, WindY, Type;
+  float FlyTime;
+
+  bool Tick(const float deltatime);
+
+ private:
   Enemy* Target;
   AssetManager* Manager;
   sf::RenderWindow* Window;
-  
-  int ShotCharges, ShotCoord, WindX, WindY, Type;
-  float FlyTime, Lifetime = 0;
-  sf::Sprite BulletSprite;
 
-  bool Tick(float deltatime);
+  float Lifetime = 0;
+  sf::Sprite BulletSprite;
 };

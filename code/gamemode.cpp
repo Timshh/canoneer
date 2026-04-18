@@ -1,6 +1,6 @@
-﻿#include <gamemode.h>
+﻿#include "gamemode.h"
 
-Gamemode::Gamemode(sf::RenderWindow* window, AssetManager* manager)
+Gamemode::Gamemode(sf::RenderWindow* const window, AssetManager* const manager)
     : BGSprite(manager->Background),
       UISprite(manager->UI),
       TutorialText(manager->Font,
@@ -10,7 +10,7 @@ Gamemode::Gamemode(sf::RenderWindow* window, AssetManager* manager)
                    40),
       TutorialText2(
           manager->Font,
-          "and make wind correction by reversing wind power multiplying "
+          "and make wind correction by reversing wind power multiplying"
           "it on distance and adding to aim",
           40),
       TutorialText3(
@@ -20,8 +20,8 @@ Gamemode::Gamemode(sf::RenderWindow* window, AssetManager* manager)
                "Canoneer, remember!   Sol - Frag   Hev - HE   Air - Flak", 60) {
   Manager = manager;
   Window = window;
-  Scores = new Score(Window, Manager);
-  Weapon = new Canon(Window, Manager);
+  Scores = std::make_unique<Score>(Window, Manager);
+  Weapon = std::make_unique<Canon>(Window, Manager);
   TutorialText.setFillColor(sf::Color::Black);
   TutorialText2.setFillColor(sf::Color::Black);
   TutorialText3.setFillColor(sf::Color::Black);
@@ -31,6 +31,7 @@ Gamemode::Gamemode(sf::RenderWindow* window, AssetManager* manager)
   TutorialText3.setPosition(sf::Vector2f(50.0, 1000.0));
   TypeText.setPosition(sf::Vector2f(180.0, 30.0));
 
+  BGSprite.setPosition(sf::Vector2f(0.0, 0.0));
   UISprite.setPosition(sf::Vector2f(0.0, 0.0));
 
   for (int i = 0; i < 63; i++) {
@@ -77,36 +78,33 @@ void Gamemode::Tick() {
     } else {
       HPressed = false;
     }
-
-    // Sprites position
-    BGSprite.setPosition(sf::Vector2f(0.0, 0.0));
-
-    // Draw
-    Window->clear();
-    Window->draw(BGSprite);
-    Weapon->Tick(deltatime, Target);
-    Window->draw(UISprite);
-
-    if (Target->Tick(deltatime)) {
-      delete Target;
-      Scores->AddScore(1);
-      Target = NewTarget();
-    }
-
-    for (int i = 0; i < 63; i++) {
-      Window->draw(Cells[i]);
-    }
-
-    Weapon->SubRender();
-    Scores->Tick(deltatime);
-
-    if (!TutorialHidden) {
-      Window->draw(TutorialText);
-      Window->draw(TutorialText2);
-      Window->draw(TutorialText3);
-    }
-    Window->draw(TypeText);
-
-    Window->display();
   }
+
+  // Draw
+  Window->clear();
+  Window->draw(BGSprite);
+  Weapon->Tick(deltatime, Target, Scores->GameOver);
+  Window->draw(UISprite);
+
+  if (Target->Tick(deltatime)) {
+    delete Target;
+    Scores->AddScore(1);
+    Target = NewTarget();
+  }
+
+  for (int i = 0; i < 63; i++) {
+    Window->draw(Cells[i]);
+  }
+
+  Weapon->SubRender();
+  Scores->Tick(deltatime);
+
+  if (!TutorialHidden) {
+    Window->draw(TutorialText);
+    Window->draw(TutorialText2);
+    Window->draw(TutorialText3);
+  }
+  Window->draw(TypeText);
+
+  Window->display();
 }

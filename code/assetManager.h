@@ -5,7 +5,7 @@
 
 class AssetManager {
  public:
-  AssetManager(sf::RenderWindow* window);
+  AssetManager();
 
   sf::SoundBuffer End, ShotWeak, ShotMid, ShotHeavy, Hit, Miss;
   sf::Texture Background, UI, Cell, Aim, Canon, CanonFire, Ready, NonReady,

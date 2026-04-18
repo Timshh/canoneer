@@ -1,7 +1,8 @@
 ﻿#include "enemy.h"
 
-Enemy::Enemy(sf::RenderWindow* window, AssetManager* manager, int coord,
-             int windX, int windY, int distance, int type)
+Enemy::Enemy(sf::RenderWindow* const window, AssetManager* const manager,
+             const int coord, const int windX, const int windY,
+             const int distance, const int type)
     : WindXText(manager->Font, "", 50),
       DistanceText(manager->Font, "", 50),
       WindYText(manager->Font, "", 50),
@@ -41,16 +42,16 @@ Enemy::Enemy(sf::RenderWindow* window, AssetManager* manager, int coord,
   WindYText.setPosition(sf::Vector2f(1734.0, 690.0));
 }
 
-bool Enemy::Hit(int coord, int distance, int type) {
-  if (coord == Coord - WindX * Distance - WindY * 9 * Distance and
-      Distance == distance and type == Type) {
+bool Enemy::Hit(const int coord, const int distance, const int type) {
+  if (coord == Coord - WindX * Distance - WindY * 9 * Distance &&
+      Distance == distance && type == Type) {
     Alive = false;
-    return 1;
+    return true;
   }
-  return 0;
+  return false;
 }
 
-bool Enemy::Tick(float deltatime) {
+bool Enemy::Tick(const float deltatime) {
   // Texts
   DistanceText.setString(std::to_string(Distance));
   WindXText.setString(std::to_string(static_cast<int>(WindX)));

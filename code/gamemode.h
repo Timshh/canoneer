@@ -9,20 +9,24 @@
 
 class Gamemode {
  public:
-  Gamemode(sf::RenderWindow* window, AssetManager* manager);
+  Gamemode(sf::RenderWindow* const window,
+           AssetManager* const manager);
+
+  void Tick();
+
+ private:
+  bool HPressed = false, TutorialHidden = false;
 
   AssetManager* Manager;
-  Score* Scores;
-  Canon* Weapon;
-  sf::RenderWindow* Window;
-  Enemy* Target;
+  std::unique_ptr<Score> Scores;
+  std::unique_ptr<Canon> Weapon;
 
-  bool HPressed = false, TutorialHidden = false;
+  Enemy* Target;
+  sf::RenderWindow* Window;
   sf::Clock Time;
   sf::Text TutorialText, TutorialText2, TutorialText3, TypeText;
   sf::Sprite BGSprite, UISprite;
   std::vector<sf::Sprite> Cells = {};
 
-  void Tick();
   Enemy* NewTarget();
 };

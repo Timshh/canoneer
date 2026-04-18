@@ -7,10 +7,10 @@
 int main() {
   srand(time(NULL));
 
-  sf::RenderWindow Window(sf::VideoMode({1920, 1080}), "Canoneer",
+  sf::RenderWindow Window(sf::VideoMode::getDesktopMode(), "Canoneer",
                           sf::State::Fullscreen);
 
-  AssetManager Manager = AssetManager(&Window);
+  AssetManager Manager = AssetManager();
   Gamemode GM(&Window, &Manager);
 
   while (Window.isOpen()) {

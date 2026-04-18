@@ -1,6 +1,6 @@
 ﻿#include "score.h"
 
-Score::Score(sf::RenderWindow* window, AssetManager* manager)
+Score::Score(sf::RenderWindow* const window, AssetManager* const manager)
     : TimeText(manager->Font, "", 50),
       ScoreText(manager->Font, "", 50),
       HiScoreText(manager->Font, "", 50),
@@ -20,17 +20,19 @@ Score::Score(sf::RenderWindow* window, AssetManager* manager)
   HiScoreText.setPosition(sf::Vector2f(106.0, 230.0));
 }
 
-void Score::AddScore(int scores) { Scores += scores; }
+void Score::AddScore(const int scores) { Scores += scores; }
 
-void Score::Tick(float deltatime) {
+void Score::Tick(const float deltatime) {
   // Timer
-  TimeLeft -= deltatime;
-  if (TimeLeft <= 0) {
-    GameOver = true;
-    EndSound.play();
-    std::ofstream File("data/hiscore.txt", std::ios::trunc);
-    File << std::max(HiScore, Scores);
-    File.close();
+  if (!GameOver) {
+    TimeLeft -= deltatime;
+    if (TimeLeft <= 0) {
+      GameOver = true;
+      EndSound.play();
+      std::ofstream File("data/hiscore.txt", std::ios::trunc);
+      File << std::max(HiScore, Scores);
+      File.close();
+    }
   }
   // Draw
   ScoreText.setString(std::to_string(Scores));

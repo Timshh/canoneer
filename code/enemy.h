@@ -5,15 +5,18 @@
 
 class Enemy {
  public:
-  Enemy(sf::RenderWindow* window, AssetManager* manager, int coord, int windX,
-        int windY, int distance, int type);
+  Enemy(sf::RenderWindow* const window, AssetManager* const manager,
+        const int coord, const int windX,
+        const int windY, const int distance, const int type);
 
   sf::RenderWindow* Window;
 
   int WindX, WindY, Distance, Coord, Type;
   bool Alive = true;
-  sf::Text WindXText, WindYText, XText, YText, DistanceText, TypeText;
 
-  bool Hit(int coord, int distance, int type);
-  bool Tick(float deltatime);
+  bool Hit(const int coord, const int distance, const int type);
+  bool Tick(const float deltatime);
+
+ private:
+  sf::Text WindXText, WindYText, XText, YText, DistanceText, TypeText;
 };

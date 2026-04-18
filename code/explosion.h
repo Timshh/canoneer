@@ -6,14 +6,17 @@
 
 class Explosion {
  public:
-  Explosion(sf::RenderWindow* window, AssetManager* manager, int location,
-            int charges, bool hit);
+  Explosion(sf::RenderWindow* const window,
+            AssetManager* const manager,
+            const int location,
+            const int charges, const bool hit);
 
+  bool Tick(const float deltatime);
+
+ private:
   sf::RenderWindow* Window;
 
   float LifeTime = 1;
   sf::Sprite ExplosionSprite;
   sf::Sound HitSound;
-
-  bool Tick(float deltatime);
 };

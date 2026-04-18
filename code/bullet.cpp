@@ -1,7 +1,9 @@
 ﻿#include "bullet.h"
 
-Bullet::Bullet(sf::RenderWindow* window, Enemy* target, AssetManager* manager,
-               int coord, int charges, int flyTime, int type)
+Bullet::Bullet(sf::RenderWindow* const window, Enemy* const target,
+               AssetManager* const manager, const int coord,
+               const int charges,
+               const int type)
     : BulletSprite(manager->Bullet) {
   Window = window;
   Manager = manager;
@@ -10,11 +12,11 @@ Bullet::Bullet(sf::RenderWindow* window, Enemy* target, AssetManager* manager,
   WindY = target->WindY;
   ShotCoord = coord;
   ShotCharges = charges;
-  FlyTime = flyTime;
+  FlyTime = charges * 3;
   Type = type;
 }
 
-bool Bullet::Tick(float deltatime) {
+bool Bullet::Tick(const float deltatime) {
   FlyTime -= deltatime;
   Lifetime += deltatime;
   float Delta = std::floor(Lifetime);
