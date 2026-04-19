@@ -6,6 +6,7 @@
 #include "canon.h"
 #include "enemy.h"
 #include "score.h"
+#include "background.h"
 
 class Gamemode {
  public:
@@ -16,16 +17,18 @@ class Gamemode {
 
  private:
   bool HPressed = false, TutorialHidden = false;
+  float BarrierPosition = -650, BarrierDelta = 170;
 
   AssetManager* Manager;
   std::unique_ptr<Score> Scores;
   std::unique_ptr<Canon> Weapon;
+  Background BG;
 
   Enemy* Target;
   sf::RenderWindow* Window;
   sf::Clock Time;
-  sf::Text TutorialText, TutorialText2, TutorialText3, TypeText;
-  sf::Sprite BGSprite, UISprite;
+  sf::Text TutorialText, TutorialText2, TutorialText3, HintText;
+  sf::Sprite BarrierSprite, UISprite;
   std::vector<sf::Sprite> Cells = {};
 
   Enemy* NewTarget();

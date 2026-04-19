@@ -17,7 +17,7 @@ class Score {
 
  private:
   int Scores = 0, HiScore = 0;
-  float TimeLeft = 120;
+  float TimeLeft;
   sf::Sound EndSound;
   sf::Text TimeText, ScoreText, HiScoreText;
 };

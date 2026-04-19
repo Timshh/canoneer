@@ -5,6 +5,8 @@ Explosion::Explosion(sf::RenderWindow* const window,
                      const int charges, const bool hit)
     : ExplosionSprite(manager->ExplosionNear), HitSound(manager->Hit) {
   Window = window;
+  Manager = manager;
+  Location = location;
   if (hit) {
     HitSound.setBuffer(manager->Hit);
   } else {
@@ -21,14 +23,16 @@ Explosion::Explosion(sf::RenderWindow* const window,
       ExplosionSprite.setTexture(manager->ExplosionFar);
       break;
   }
-  float AimX = location % 9;
-  float AimY = static_cast<int>(location / 9);
-  ExplosionSprite.setPosition(sf::Vector2f(546 + 92 * AimX, 218 + 92 * AimY));
   HitSound.play();
 }
 
-bool Explosion::Tick(const float deltatime) {
+bool Explosion::Tick(const float deltatime, const float offset) {
   LifeTime -= deltatime;
+  float AimX = Location % Manager->Columns;
+  float AimY = Location / Manager->Columns;
+  ExplosionSprite.setPosition(
+      sf::Vector2f(Manager->GridStartX + Manager->CellSize * AimX,
+                   Manager->GridStartY + Manager->CellSize * AimY + offset));
   if (LifeTime <= 0) {  
     return 1;
   }

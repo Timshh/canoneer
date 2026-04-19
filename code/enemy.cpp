@@ -3,18 +3,19 @@
 Enemy::Enemy(sf::RenderWindow* const window, AssetManager* const manager,
              const int coord, const int windX, const int windY,
              const int distance, const int type)
-    : WindXText(manager->Font, "", 50),
-      DistanceText(manager->Font, "", 50),
-      WindYText(manager->Font, "", 50),
-      XText(manager->Font, "", 50),
-      YText(manager->Font, "", 50),
-      TypeText(manager->Font, "", 50) {
+    : WindXText(manager->Font, "", manager->TextSizeMid),
+      DistanceText(manager->Font, "", manager->TextSizeMid),
+      WindYText(manager->Font, "", manager->TextSizeMid),
+      XText(manager->Font, "", manager->TextSizeMid),
+      YText(manager->Font, "", manager->TextSizeMid),
+      TypeText(manager->Font, "", manager->TextSizeMid) {
   Window = window;
   Coord = coord;
   WindX = windX;
   WindY = windY;
   Distance = distance;
   Type = type;
+  Columns = manager->Columns;
   switch (Type) {
     case 0:
       TypeText.setString("Sol");
@@ -27,23 +28,26 @@ Enemy::Enemy(sf::RenderWindow* const window, AssetManager* const manager,
       break;
   }
 
-  TypeText.setFillColor(sf::Color::Black);
-  XText.setFillColor(sf::Color::Black);
-  YText.setFillColor(sf::Color::Black);
-  DistanceText.setFillColor(sf::Color::Black);
-  WindXText.setFillColor(sf::Color::Black);
-  WindYText.setFillColor(sf::Color::Black);
+  TypeText.setFillColor(manager->MainColor);
+  XText.setFillColor(manager->MainColor);
+  YText.setFillColor(manager->MainColor);
+  DistanceText.setFillColor(manager->MainColor);
+  WindXText.setFillColor(manager->MainColor);
+  WindYText.setFillColor(manager->MainColor);
 
-  TypeText.setPosition(sf::Vector2f(1734.0, 230.0));
-  XText.setPosition(sf::Vector2f(1734.0, 322.0));
-  YText.setPosition(sf::Vector2f(1734.0, 414.0));
-  DistanceText.setPosition(sf::Vector2f(1734.0, 506.0));
-  WindXText.setPosition(sf::Vector2f(1734.0, 598.0));
-  WindYText.setPosition(sf::Vector2f(1734.0, 690.0));
+  TypeText.setPosition(sf::Vector2f(manager->RightHUDColumn, manager->HUDRow1));
+  XText.setPosition(sf::Vector2f(manager->RightHUDColumn, manager->HUDRow2));
+  YText.setPosition(sf::Vector2f(manager->RightHUDColumn, manager->HUDRow3));
+  DistanceText.setPosition(
+      sf::Vector2f(manager->RightHUDColumn, manager->HUDRow4));
+  WindXText.setPosition(
+      sf::Vector2f(manager->RightHUDColumn, manager->HUDRow5));
+  WindYText.setPosition(
+      sf::Vector2f(manager->RightHUDColumn, manager->HUDRow6));
 }
 
 bool Enemy::Hit(const int coord, const int distance, const int type) {
-  if (coord == Coord - WindX * Distance - WindY * 9 * Distance &&
+  if (coord == Coord - WindX * Distance - WindY * Columns * Distance &&
       Distance == distance && type == Type) {
     Alive = false;
     return true;
@@ -56,8 +60,8 @@ bool Enemy::Tick(const float deltatime) {
   DistanceText.setString(std::to_string(Distance));
   WindXText.setString(std::to_string(static_cast<int>(WindX)));
   WindYText.setString(std::to_string(static_cast<int>(WindY)));
-  XText.setString(std::to_string(Coord % 9 + 1));
-  YText.setString(std::to_string(static_cast<int>((Coord / 9) + 1)));
+  XText.setString(std::to_string(Coord % Columns + 1));
+  YText.setString(std::to_string(static_cast<int>((Coord / Columns) + 1)));
   // Draw
   Window->draw(DistanceText);
   Window->draw(WindXText);

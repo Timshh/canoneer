@@ -11,7 +11,7 @@ class Enemy {
 
   sf::RenderWindow* Window;
 
-  int WindX, WindY, Distance, Coord, Type;
+  int WindX, WindY, Distance, Coord, Type, Columns;
   bool Alive = true;
 
   bool Hit(const int coord, const int distance, const int type);

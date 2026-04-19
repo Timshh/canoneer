@@ -1,45 +1,43 @@
 ﻿#include "gamemode.h"
 
 Gamemode::Gamemode(sf::RenderWindow* const window, AssetManager* const manager)
-    : BGSprite(manager->Background),
+    : BarrierSprite(manager->Barrier),
       UISprite(manager->UI),
       TutorialText(manager->Font,
-                   "Tutorial: arrows to aim, X to charge, Z to fire, C to "
-                   "change Type. Esc to "
-                   "exit. Aim at enemy coordinates, load charges",
-                   40),
+                   manager->Tutorial1Text,
+                   manager->TextSizeSmall),
       TutorialText2(
-          manager->Font,
-          "and make wind correction by reversing wind power multiplying"
-          "it on distance and adding to aim",
-          40),
+          manager->Font, manager->Tutorial2Text,
+          manager->TextSizeSmall),
       TutorialText3(
-          manager->Font,
-          "Get as many score as can in 120 seconds. H to hide tutorial", 40),
-      TypeText(manager->Font,
-               "Canoneer, remember!   Sol - Frag   Hev - HE   Air - Flak", 60) {
+          manager->Font, manager->Tutorial3Text,
+          manager->TextSizeSmall),
+      HintText(manager->Font, manager->HintText,
+               manager->TextSizeBig),
+      BG(Background(window, manager)) {
   Manager = manager;
   Window = window;
   Scores = std::make_unique<Score>(Window, Manager);
   Weapon = std::make_unique<Canon>(Window, Manager);
-  TutorialText.setFillColor(sf::Color::Black);
-  TutorialText2.setFillColor(sf::Color::Black);
-  TutorialText3.setFillColor(sf::Color::Black);
-  TypeText.setFillColor(sf::Color::Black);
-  TutorialText.setPosition(sf::Vector2f(50.0, 900.0));
-  TutorialText2.setPosition(sf::Vector2f(50.0, 950.0));
-  TutorialText3.setPosition(sf::Vector2f(50.0, 1000.0));
-  TypeText.setPosition(sf::Vector2f(180.0, 30.0));
+  TutorialText.setFillColor(Manager->MainColor);
+  TutorialText2.setFillColor(Manager->MainColor);
+  TutorialText3.setFillColor(Manager->MainColor);
+  HintText.setFillColor(Manager->MainColor);
+  TutorialText.setPosition(Manager->Tutorial1Position);
+  TutorialText2.setPosition(Manager->Tutorial2Position);
+  TutorialText3.setPosition(Manager->Tutorial3Position);
+  HintText.setPosition(Manager->HintPosition);
 
-  BGSprite.setPosition(sf::Vector2f(0.0, 0.0));
-  UISprite.setPosition(sf::Vector2f(0.0, 0.0));
+  BarrierSprite.setPosition(sf::Vector2f(0, BarrierPosition));
+  UISprite.setPosition(sf::Vector2f(0, 0));
 
-  for (int i = 0; i < 63; i++) {
+  for (int i = 0; i < Manager->GridSize; i++) {
     sf::Sprite NewCell(Manager->Cell);
-    float x = i % 9;
-    float y = trunc(i / 9);
-    NewCell.setPosition(
-        sf::Vector2f(sf::Vector2f(546.0 + 92.0 * x, 218.0 + 92.0 * y)));
+    float x = i % Manager->Columns;
+    float y = trunc(i / Manager->Columns);
+    NewCell.setPosition(sf::Vector2f(
+        sf::Vector2f(Manager->GridStartX + Manager->CellSize * x,
+                     Manager->GridStartY + Manager->CellSize * y)));
     Cells.push_back(NewCell);
   }
 
@@ -56,7 +54,7 @@ Enemy* Gamemode::NewTarget() {
     windY = rand() % 3 - 1;
   }
   int enemyX = rand() % 3 + 3;
-  int enemyY = (rand() % 3 + 2) * 9;
+  int enemyY = (rand() % 3 + 2) * Manager->Columns;
   int enemyCoord = enemyX + enemyY;
   return new Enemy(Window, Manager, enemyCoord, windX, windY, distance,
                    rand() % 3);
@@ -78,22 +76,31 @@ void Gamemode::Tick() {
     } else {
       HPressed = false;
     }
+    Weapon->TickInput();
   }
+  BG.SetOffset(Weapon->GetOffset(deltatime));
 
   // Draw
   Window->clear();
-  Window->draw(BGSprite);
-  Weapon->Tick(deltatime, Target, Scores->GameOver);
+  BG.Tick(deltatime);
+  Weapon->Tick(deltatime, Target);
+  for (int i = 0; i < Manager->GridSize; i++) {
+    Window->draw(Cells[i]);
+  }
+  if (Scores->GameOver) {
+    if (BarrierPosition != 0) {
+      BarrierPosition = std::min(0.0f, BarrierPosition + deltatime * BarrierDelta);
+    }
+    BarrierSprite.setPosition(
+        sf::Vector2f(0, floor(BarrierPosition / BarrierDelta) * BarrierDelta));
+  }
+  Window->draw(BarrierSprite);
   Window->draw(UISprite);
 
   if (Target->Tick(deltatime)) {
     delete Target;
     Scores->AddScore(1);
     Target = NewTarget();
-  }
-
-  for (int i = 0; i < 63; i++) {
-    Window->draw(Cells[i]);
   }
 
   Weapon->SubRender();
@@ -104,7 +111,7 @@ void Gamemode::Tick() {
     Window->draw(TutorialText2);
     Window->draw(TutorialText3);
   }
-  Window->draw(TypeText);
+  Window->draw(HintText);
 
   Window->display();
 }

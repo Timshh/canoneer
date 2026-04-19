@@ -14,7 +14,7 @@ class Bullet {
   int ShotCharges, ShotCoord, WindX, WindY, Type;
   float FlyTime;
 
-  bool Tick(const float deltatime);
+  bool Tick(const float deltatime, const float offset);
 
  private:
   Enemy* Target;

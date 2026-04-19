@@ -1,26 +1,50 @@
 ﻿#include "assetManager.h"
 
 AssetManager::AssetManager() {
-  bool Opened = Font.openFromFile("data/Tiny5.ttf") &&
-                End.loadFromFile("data/Ending.wav") &&
-                Hit.loadFromFile("data/Hit.wav") &&
-                Miss.loadFromFile("data/Miss.wav") &&
-                ShotWeak.loadFromFile("data/FireWeak.wav") &&
-                ShotMid.loadFromFile("data/FireMid.wav") &&
-                ShotHeavy.loadFromFile("data/FireHeavy.wav") &&
-                Background.loadFromFile("data/BG.png") &&
-                UI.loadFromFile("data/ArtUI.png") &&
-                Cell.loadFromFile("data/Cell.png") &&
-                Aim.loadFromFile("data/Aim.png") &&
-                Canon.loadFromFile("data/Canon.png") &&
-                CanonFire.loadFromFile("data/CanonFire.png") &&
-                Ready.loadFromFile("data/Ready.png") &&
-                NonReady.loadFromFile("data/NonReady.png") &&
-                ExplosionFar.loadFromFile("data/ExplosionFar.png") &&
-                ExplosionMid.loadFromFile("data/ExplosionMid.png") &&
-                ExplosionNear.loadFromFile("data/ExplosionNear.png") &&
-                Bullet.loadFromFile("data/Bullet.png");
-  if (!Opened) {
+  auto load = [](auto& resource, const std::string& path) {
+    if (!resource.loadFromFile(path)) {
+      std::cerr << "Failed to load: " << path << "\n";
+      return false;
+    }
+    return true;
+  };
+
+  auto open = [](auto& resource, const std::string& path) {
+    if (!resource.openFromFile(path)) {
+      std::cerr << "Failed to load: " << path << "\n";
+      return false;
+    }
+    return true;
+  };
+
+  bool opened = true;
+  opened &= open(Font, "data/Tiny5.ttf");
+
+  opened &= load(Background, "data/BG.png");
+  opened &= load(UI, "data/ArtUI.png");
+  opened &= load(Cell, "data/Cell.png");
+  opened &= load(Barrier, "data/Barrier.png");
+
+  opened &= load(Aim, "data/Aim.png");
+  opened &= load(Ready, "data/Ready.png");
+  opened &= load(NonReady, "data/NonReady.png");
+
+  opened &= load(Canon, "data/Canon.png");
+  opened &= load(CanonFire, "data/CanonFire.png");
+
+  opened &= load(Bullet, "data/Bullet.png");
+  opened &= load(ExplosionFar, "data/ExplosionFar.png");
+  opened &= load(ExplosionMid, "data/ExplosionMid.png");
+  opened &= load(ExplosionNear, "data/ExplosionNear.png");
+
+  opened &= load(End, "data/Ending.wav");
+  opened &= load(Hit, "data/Hit.wav");
+  opened &= load(Miss, "data/Miss.wav");
+  opened &= load(ShotWeak, "data/FireWeak.wav");
+  opened &= load(ShotMid, "data/FireMid.wav");
+  opened &= load(ShotHeavy, "data/FireHeavy.wav");
+
+  if (!opened) {
     throw std::runtime_error("Failed to load data");
   }
 }
