@@ -4,12 +4,11 @@
 #include <fstream>
 
 #include "assetManager.h"
+#include "cloud.h"
 
 class Background {
  public:
   Background(sf::RenderWindow* const window, AssetManager* const manager);
-
-  
 
   void Tick(const float deltatime);
   void SetOffset(const float offset);
@@ -17,6 +16,8 @@ class Background {
  private:
   sf::RenderWindow* Window;
 
+
+  std::vector<Cloud> Clouds;
   sf::Sprite BGSprite;
   float Offset;
 };

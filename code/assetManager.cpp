@@ -16,11 +16,22 @@ AssetManager::AssetManager() {
     }
     return true;
   };
-
+  sf::Texture cloud;
   bool opened = true;
   opened &= open(Font, "data/Tiny5.ttf");
 
   opened &= load(Background, "data/BG.png");
+  opened &= load(cloud, "data/Cloud1.png");
+  Clouds.push_back(cloud);
+  opened &= load(cloud, "data/Cloud2.png");
+  Clouds.push_back(cloud);
+  opened &= load(cloud, "data/Cloud3.png");
+  Clouds.push_back(cloud);
+  opened &= load(cloud, "data/Cloud4.png");
+  Clouds.push_back(cloud);
+  opened &= load(cloud, "data/Cloud5.png");
+  Clouds.push_back(cloud);
+
   opened &= load(UI, "data/ArtUI.png");
   opened &= load(Cell, "data/Cell.png");
   opened &= load(Barrier, "data/Barrier.png");

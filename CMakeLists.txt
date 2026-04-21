@@ -27,7 +27,8 @@ set (SOURCES
 "code/explosion.cpp"
 "code/enemy.cpp"
 "code/assetManager.cpp"
-"code/background.cpp")
+"code/background.cpp"
+"code/cloud.cpp")
 set (HEADERS 
 "code/gamemode.h"
 "code/score.h"
@@ -36,7 +37,8 @@ set (HEADERS
 "code/explosion.h"
 "code/enemy.h"
 "code/assetManager.h"
-"code/background.h")
+"code/background.h"
+"code/cloud.h")
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
