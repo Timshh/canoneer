@@ -10,7 +10,7 @@ class AssetManager {
   sf::SoundBuffer End, ShotWeak, ShotMid, ShotHeavy, Hit, Miss;
   sf::Texture Background, Barrier, UI, Cell, Aim, Canon, CanonFire, Ready,
       NonReady, ExplosionFar, ExplosionMid, ExplosionNear, Bullet;
-  std::vector<sf::Texture> Clouds;
+  std::vector<sf::Texture> Clouds, Hedgehogs, Trees;
   sf::Font Font;
 
   const float CellSize = 92;
@@ -29,8 +29,14 @@ class AssetManager {
 
   const int LeftCloudBorder = 200;
   const int RightCloudBorder = 1420;
-  const int DownCloudBorder = 100;
+  const int DownCloudBorder = 0;
   const int UpCloudBorder = 450;
+
+  const int LeftDecorBorder = 450;
+  const int RightDecorBorder = 1450;
+  const int DownDecorBorder = 550;
+  const int UpDecorBorder = 900;
+
   const sf::Vector2f Tutorial1Position = sf::Vector2f(10, 900);
   const sf::Vector2f Tutorial2Position = sf::Vector2f(10, 950);
   const sf::Vector2f Tutorial3Position = sf::Vector2f(10, 1000);

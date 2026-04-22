@@ -5,6 +5,7 @@
 
 #include "assetManager.h"
 #include "cloud.h"
+#include "decor.h"
 
 class Background {
  public:
@@ -18,6 +19,7 @@ class Background {
 
 
   std::vector<Cloud> Clouds;
+  std::vector<Decor> Decorations;
   sf::Sprite BGSprite;
   float Offset;
 };

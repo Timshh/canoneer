@@ -31,7 +31,8 @@ void Score::Tick(const float deltatime) {
       GameOver = true;
       EndSound.play();
       std::ofstream File("data/hiscore.txt", std::ios::trunc);
-      File << std::max(HiScore, Scores);
+      HiScore = std::max(HiScore, Scores);
+      File << HiScore;
       File.close();
     }
   }
