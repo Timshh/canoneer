@@ -3,17 +3,13 @@
 Gamemode::Gamemode(sf::RenderWindow* const window, AssetManager* const manager)
     : BarrierSprite(manager->Barrier),
       UISprite(manager->UI),
-      TutorialText(manager->Font,
-                   manager->Tutorial1Text,
+      TutorialText(manager->Font, manager->Tutorial1Text,
                    manager->TextSizeSmall),
-      TutorialText2(
-          manager->Font, manager->Tutorial2Text,
-          manager->TextSizeSmall),
-      TutorialText3(
-          manager->Font, manager->Tutorial3Text,
-          manager->TextSizeSmall),
-      HintText(manager->Font, manager->HintText,
-               manager->TextSizeBig),
+      TutorialText2(manager->Font, manager->Tutorial2Text,
+                    manager->TextSizeSmall),
+      TutorialText3(manager->Font, manager->Tutorial3Text,
+                    manager->TextSizeSmall),
+      HintText(manager->Font, manager->HintText, manager->TextSizeBig),
       BG(Background(window, manager)) {
   Manager = manager;
   Window = window;
@@ -40,8 +36,6 @@ Gamemode::Gamemode(sf::RenderWindow* const window, AssetManager* const manager)
                      Manager->GridStartY + Manager->CellSize * y)));
     Cells.push_back(NewCell);
   }
-
-  Target = NewTarget();
 }
 
 Enemy* Gamemode::NewTarget() {
@@ -77,19 +71,42 @@ void Gamemode::Tick() {
       HPressed = false;
     }
     Weapon->TickInput();
+  } else {
+    Weapon->Reset();
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::V) and
+        BarrierPosition == 0) {
+      Scores->GameOver = false;
+      Scores->Reset();
+      BG.Reset();
+      if (Target) {
+        delete Target;
+      }
+      Target = NewTarget();
+    }
   }
   BG.SetOffset(Weapon->GetOffset(deltatime));
 
   // Draw
   Window->clear();
   BG.Tick(deltatime);
-  Weapon->Tick(deltatime, Target);
+  if (Target) {
+    Weapon->Tick(deltatime, Target);
+  }
   for (int i = 0; i < Manager->GridSize; i++) {
     Window->draw(Cells[i]);
   }
+
   if (Scores->GameOver) {
     if (BarrierPosition != 0) {
-      BarrierPosition = std::min(0.0f, BarrierPosition + deltatime * BarrierDelta);
+      BarrierPosition =
+          std::min(0.0f, BarrierPosition + deltatime * BarrierDelta);
+    }
+    BarrierSprite.setPosition(
+        sf::Vector2f(0, floor(BarrierPosition / BarrierDelta) * BarrierDelta));
+  } else {
+    if (BarrierPosition != BarrierStartPosition) {
+      BarrierPosition = std::max(BarrierStartPosition,
+                                 BarrierPosition - deltatime * BarrierDelta);
     }
     BarrierSprite.setPosition(
         sf::Vector2f(0, floor(BarrierPosition / BarrierDelta) * BarrierDelta));
@@ -97,10 +114,14 @@ void Gamemode::Tick() {
   Window->draw(BarrierSprite);
   Window->draw(UISprite);
 
-  if (Target->Tick(deltatime)) {
-    delete Target;
-    Scores->AddScore(1);
-    Target = NewTarget();
+  if (Target) {
+    if (Target->Tick(deltatime)) {
+      Scores->AddScore(1 + Target->Distance);
+      if (Target) {
+        delete Target;
+      }
+      Target = NewTarget();
+    }
   }
 
   Weapon->SubRender();

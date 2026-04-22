@@ -166,6 +166,12 @@ void Canon::TickInput() {
   }
 }
 
+void Canon::Reset() {
+  Charges = 0;
+  AimCoord = 0;
+  Type = 0;
+}
+
 float Canon::GetOffset(const float deltatime) {
   if (Shake != 0) {
     Shake = std::max(0.0f, Shake - deltatime * ShakeMult);

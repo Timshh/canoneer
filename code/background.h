@@ -13,10 +13,11 @@ class Background {
 
   void Tick(const float deltatime);
   void SetOffset(const float offset);
+  void Reset();
 
  private:
   sf::RenderWindow* Window;
-
+  AssetManager* Manager;
 
   std::vector<Cloud> Clouds;
   std::vector<Decor> Decorations;

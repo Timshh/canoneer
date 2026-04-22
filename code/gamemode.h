@@ -17,14 +17,14 @@ class Gamemode {
 
  private:
   bool HPressed = false, TutorialHidden = false;
-  float BarrierPosition = -650, BarrierDelta = 170;
+  float BarrierStartPosition = -650, BarrierPosition = 0, BarrierDelta = 170;
 
   AssetManager* Manager;
   std::unique_ptr<Score> Scores;
   std::unique_ptr<Canon> Weapon;
   Background BG;
 
-  Enemy* Target;
+  Enemy* Target = nullptr;
   sf::RenderWindow* Window;
   sf::Clock Time;
   sf::Text TutorialText, TutorialText2, TutorialText3, HintText;

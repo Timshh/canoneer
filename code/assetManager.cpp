@@ -60,6 +60,7 @@ AssetManager::AssetManager() {
   opened &= load(ExplosionMid, "data/ExplosionMid.png");
   opened &= load(ExplosionNear, "data/ExplosionNear.png");
 
+  opened &= load(Start, "data/Start.wav");
   opened &= load(End, "data/Ending.wav");
   opened &= load(Hit, "data/Hit.wav");
   opened &= load(Miss, "data/Miss.wav");

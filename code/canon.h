@@ -14,6 +14,7 @@ class Canon {
   void Tick(const float deltatime, Enemy* const target);
   void SubRender();
   void TickInput();
+  void Reset();
   float GetOffset(const float deltatime);
 
  private:

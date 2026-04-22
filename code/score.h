@@ -10,14 +10,16 @@ class Score {
   Score(sf::RenderWindow* const window, AssetManager* const manager);
 
   sf::RenderWindow* Window;
+  AssetManager* Manager;
 
-  bool GameOver = false;
+  bool GameOver = true;
   void AddScore(const int scores);
   void Tick(const float deltatime);
+  void Reset();
 
  private:
   int Scores = 0, HiScore = 0;
-  float TimeLeft;
-  sf::Sound EndSound;
+  float TimeLeft = 0;
+  sf::Sound StartSound, EndSound;
   sf::Text TimeText, ScoreText, HiScoreText;
 };

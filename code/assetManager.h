@@ -7,7 +7,7 @@ class AssetManager {
  public:
   AssetManager();
 
-  sf::SoundBuffer End, ShotWeak, ShotMid, ShotHeavy, Hit, Miss;
+  sf::SoundBuffer Start, End, ShotWeak, ShotMid, ShotHeavy, Hit, Miss;
   sf::Texture Background, Barrier, UI, Cell, Aim, Canon, CanonFire, Ready,
       NonReady, ExplosionFar, ExplosionMid, ExplosionNear, Bullet;
   std::vector<sf::Texture> Clouds, Hedgehogs, Trees;
@@ -65,5 +65,5 @@ class AssetManager {
       "and make wind correction by reversing wind power multiplying"
       "it on distance and adding to aim";
   const std::string Tutorial3Text =
-      "Get as many score as can in 120 seconds. H to hide tutorial";
+      "Get as many score as can in 120 seconds. H to hide tutorial. V to start/restart";
 };
