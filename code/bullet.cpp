@@ -30,7 +30,7 @@ bool Bullet::Tick(const float deltatime, const float offset) {
   Window->draw(BulletSprite);
   if (FlyTime <= 0) {
     Target->Hit(ShotCoord, ShotCharges, Type);
-    return 1;
+    return true;
   }
-  return 0;
+  return false;
 }
