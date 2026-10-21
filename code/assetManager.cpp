@@ -1,74 +1,75 @@
 ﻿#include "assetManager.h"
 
 AssetManager::AssetManager() {
-  auto load = [](auto& resource, const std::string& path) {
-    if (!resource.loadFromFile(path)) {
-      std::cerr << "Failed to load: " << path << "\n";
-      return false;
-    }
-    return true;
-  };
-
-  auto open = [](auto& resource, const std::string& path) {
-    if (!resource.openFromFile(path)) {
-      std::cerr << "Failed to load: " << path << "\n";
-      return false;
-    }
-    return true;
-  };
   sf::Texture loaded;
-  bool opened = true;
-  opened &= open(Font, "data/Tiny5.ttf");
+  bool Opened = true;
+  Opened &= OpenResource(Font, "data/Tiny5.ttf");
 
-  opened &= load(Background, "data/BG.png");
-  opened &= load(loaded, "data/Cloud1.png");
+  Opened &= LoadResource(Background, "data/BG.png");
+  Opened &= LoadResource(loaded, "data/Cloud1.png");
   Clouds.push_back(loaded);
-  opened &= load(loaded, "data/Cloud2.png");
+  Opened &= LoadResource(loaded, "data/Cloud2.png");
   Clouds.push_back(loaded);
-  opened &= load(loaded, "data/Cloud3.png");
+  Opened &= LoadResource(loaded, "data/Cloud3.png");
   Clouds.push_back(loaded);
-  opened &= load(loaded, "data/Cloud4.png");
+  Opened &= LoadResource(loaded, "data/Cloud4.png");
   Clouds.push_back(loaded);
-  opened &= load(loaded, "data/Cloud5.png");
+  Opened &= LoadResource(loaded, "data/Cloud5.png");
   Clouds.push_back(loaded);
-  opened &= load(loaded, "data/Hedgehog1.png");
+  Opened &= LoadResource(loaded, "data/Hedgehog1.png");
   Hedgehogs.push_back(loaded);
-  opened &= load(loaded, "data/Hedgehog2.png");
+  Opened &= LoadResource(loaded, "data/Hedgehog2.png");
   Hedgehogs.push_back(loaded);
-  opened &= load(loaded, "data/Hedgehog3.png");
+  Opened &= LoadResource(loaded, "data/Hedgehog3.png");
   Hedgehogs.push_back(loaded);
-  opened &= load(loaded, "data/Tree1.png");
+  Opened &= LoadResource(loaded, "data/Tree1.png");
   Trees.push_back(loaded);
-  opened &= load(loaded, "data/Tree2.png");
+  Opened &= LoadResource(loaded, "data/Tree2.png");
   Trees.push_back(loaded);
-  opened &= load(loaded, "data/Tree3.png");
+  Opened &= LoadResource(loaded, "data/Tree3.png");
   Trees.push_back(loaded);
 
-  opened &= load(UI, "data/ArtUI.png");
-  opened &= load(Cell, "data/Cell.png");
-  opened &= load(Barrier, "data/Barrier.png");
+  Opened &= LoadResource(UI, "data/ArtUI.png");
+  Opened &= LoadResource(Cell, "data/Cell.png");
+  Opened &= LoadResource(Barrier, "data/Barrier.png");
 
-  opened &= load(Aim, "data/Aim.png");
-  opened &= load(Ready, "data/Ready.png");
-  opened &= load(NonReady, "data/NonReady.png");
+  Opened &= LoadResource(Aim, "data/Aim.png");
+  Opened &= LoadResource(Ready, "data/Ready.png");
+  Opened &= LoadResource(NonReady, "data/NonReady.png");
 
-  opened &= load(Canon, "data/Canon.png");
-  opened &= load(CanonFire, "data/CanonFire.png");
+  Opened &= LoadResource(Canon, "data/Canon.png");
+  Opened &= LoadResource(CanonFire, "data/CanonFire.png");
 
-  opened &= load(Bullet, "data/Bullet.png");
-  opened &= load(ExplosionFar, "data/ExplosionFar.png");
-  opened &= load(ExplosionMid, "data/ExplosionMid.png");
-  opened &= load(ExplosionNear, "data/ExplosionNear.png");
+  Opened &= LoadResource(Bullet, "data/Bullet.png");
+  Opened &= LoadResource(ExplosionFar, "data/ExplosionFar.png");
+  Opened &= LoadResource(ExplosionMid, "data/ExplosionMid.png");
+  Opened &= LoadResource(ExplosionNear, "data/ExplosionNear.png");
 
-  opened &= load(Start, "data/Start.wav");
-  opened &= load(End, "data/Ending.wav");
-  opened &= load(Hit, "data/Hit.wav");
-  opened &= load(Miss, "data/Miss.wav");
-  opened &= load(ShotWeak, "data/FireWeak.wav");
-  opened &= load(ShotMid, "data/FireMid.wav");
-  opened &= load(ShotHeavy, "data/FireHeavy.wav");
+  Opened &= LoadResource(Start, "data/Start.wav");
+  Opened &= LoadResource(End, "data/Ending.wav");
+  Opened &= LoadResource(Hit, "data/Hit.wav");
+  Opened &= LoadResource(Miss, "data/Miss.wav");
+  Opened &= LoadResource(ShotWeak, "data/FireWeak.wav");
+  Opened &= LoadResource(ShotMid, "data/FireMid.wav");
+  Opened &= LoadResource(ShotHeavy, "data/FireHeavy.wav");
 
-  if (!opened) {
+  if (!Opened) {
     throw std::runtime_error("Failed to load data");
   }
+}
+
+bool AssetManager::LoadResource(auto& resource, const std::string& path) {
+  if (!resource.loadFromFile(path)) {
+    std::cerr << "Failed to load: " << path << "\n";
+    return false;
+  }
+  return true;
+}
+
+bool AssetManager::OpenResource(auto& resource, const std::string& path) {
+  if (!resource.openFromFile(path)) {
+    std::cerr << "Failed to load: " << path << "\n";
+    return false;
+  }
+  return true;
 }

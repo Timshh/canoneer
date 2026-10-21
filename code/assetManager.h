@@ -66,4 +66,8 @@ class AssetManager {
       "it on distance and adding to aim";
   const std::string Tutorial3Text =
       "Get as many score as can in 120 seconds. H to hide tutorial. V to start/restart";
+
+ private:
+  bool LoadResource(auto& resource, const std::string& path);
+  bool OpenResource(auto& resource, const std::string& path);
 };
